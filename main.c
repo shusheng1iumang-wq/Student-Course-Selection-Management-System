@@ -16,6 +16,8 @@ S_Student_List ssl_head={
 int main(int argc, char *argv[]) {
 	S_Student_List *p=NULL;
 	int i=0;
+	
+	Read_SSl(&ssl_head);
 		
 	p = Inquiry_User(&ssl_head);
 	if(p==&ssl_head){
@@ -35,6 +37,7 @@ int main(int argc, char *argv[]) {
 		printf("Welcome,User:%s",p->name);	
 	};
 	//接下来写操作，思考用户可以使用的功能。
+	Save_SSL(&ssl_head);
 	free_malloc_list(&ssl_head);
 	return 0;
 }

@@ -8,4 +8,18 @@ void admin_class_menu(void){
 	show_admin_class_menu();
 	scanf("%d",&i);
 	
+	switch(i){
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		default:
+			break;
+	}
+}
+
+void Course_Entry(void){
+	
 }
