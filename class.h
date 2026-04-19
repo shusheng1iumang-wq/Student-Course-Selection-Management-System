@@ -7,11 +7,11 @@
 typedef struct CLASS_LIST{
 	int Course_Number;   //课程编号
 	char Course_Name[COURSE_NAME_LINE];  //课程名
-	double Credits;   //课程学分
-	char Lecturer[NAME_LINE];   //课程讲师
-	int Max_Enrollment;   //人数限制
-	int Current_Students;  //已选人数
-	Bool Category;   //课程类别
+	double Credits;   //学分
+	char Lecturer[NAME_LINE];   //教师
+	int Max_Enrollment;   //最大人数
+	int Current_Students;  //已报名学生
+	Bool Category;   //课程类别HHS，SS
 	struct CLASS_LITS *next;
 }Class_List; 
 

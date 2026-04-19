@@ -25,9 +25,8 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     getchar();
 	}while(s_id<STUDENT_ID_LINE);
 	
-	if(s_id==STUDENT_ID_LINE)goto admin;
-	
-    p = Search_Student_ID(ssl_head,s_id);
+	if(s_id==STUDENT_ID_LINE)p=ssl_head;
+	else p = Search_Student_ID(ssl_head,s_id);
     
     if(p!=NULL){
     	i=0;
@@ -64,11 +63,6 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 			exit(0);
 		}
 		p = Set_Up_Student_Account(ssl_head,s_id);
-	}
-	
-	if(0){
-		admin:
-			p = ssl_head;
 	}
 	return p;
 };

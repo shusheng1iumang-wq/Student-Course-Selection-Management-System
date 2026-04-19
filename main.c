@@ -13,14 +13,19 @@ S_Student_List ssl_head={
 	STUDENT_ID_LINE,"admin","Your_father",
 };
 
+
+
 int main(int argc, char *argv[]) {
 	S_Student_List *p=NULL;
 	int i=0;
 	
-	Read_SSl(&ssl_head);
+	Read_SSl(&ssl_head);  //读取
 		
-	p = Inquiry_User(&ssl_head);
+	p = Inquiry_User(&ssl_head);   //询问
+	
+	//进入
 	if(p==&ssl_head){
+		//管理员
 		printf("Welcome,%s!\n",p->name);
 		show_admin_menu();
 		scanf("%d",&i);
@@ -34,10 +39,15 @@ int main(int argc, char *argv[]) {
 				break;
 		}
 	}else{
+		//学生
 		printf("Welcome,User:%s",p->name);	
 	};
-	//接下来写操作，思考用户可以使用的功能。
+
+	//保存
 	Save_SSL(&ssl_head);
+	
+	//释放
 	free_malloc_list(&ssl_head);
+	
 	return 0;
 }

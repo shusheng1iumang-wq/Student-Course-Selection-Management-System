@@ -1,6 +1,7 @@
 #include"class.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include"show.h"
 
 void admin_class_menu(void){
 	int i=0;
@@ -10,6 +11,7 @@ void admin_class_menu(void){
 	
 	switch(i){
 		case 0:
+			Course_Entry();
 			break;
 		case 1:
 			break;
