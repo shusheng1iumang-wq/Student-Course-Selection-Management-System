@@ -29,8 +29,9 @@ void admin_class_menu(Class_List *cl_head){
 }
 
 void Course_Entry(Class_List* cl_head){
-	Class_List *p;
+	Class_List *p=NULL;
 	Class_List *head = cl_head;
+	Class_List *temp=NULL;
 	int i;
 	char out=0;
 	FILE *fp=NULL;
@@ -44,8 +45,26 @@ void Course_Entry(Class_List* cl_head){
 			exit(1);
 		}
 		
+		re_entry:
 		printf("Course Number:");
-		scanf("%d",&p->Course_Name);getchar();
+		scanf("%d",&p->Course_Number);getchar();
+		temp = check_course_number(cl_head,p->Course_Number);
+		if(temp!=NULL){
+			printf("There have the same Course Number.\n");
+			show_cl_item(temp);
+			do{
+				printf("What do you want?\n");
+				printf("0->delete\n");
+				printf("1->re-entry\n");
+				printf("Your choose:");
+				scanf("%d",&i);getchar();
+			}while(i!=0&&i!=1);
+			if(i==0){
+				delete_cl_item(cl_head,p->Course_Number);
+			}else if(i==1){
+				goto re_entry;
+			}	
+		}
 		
 		printf("Course Name:");
 		cpystring("",p->Course_Name,COURSE_NAME_LINE); //清理空间
@@ -126,4 +145,37 @@ void free_malloc_cl_list(Class_List* cl_head){
 		free(l);
 	}
 	cl_head->next=NULL;
+}
+
+Class_List * check_course_number(Class_List* cl_head,int number){
+	Class_List *p=NULL;
+	while(cl_head!=NULL){
+		if(cl_head->Course_Number==number){
+			p = cl_head;
+			break;
+		}
+		cl_head = cl_head->next;
+	}
+	return p;
+}
+
+void delete_cl_item(Class_List* cl_head,int number){
+	Class_List *l = cl_head;
+	Class_List *r = cl_head->next;
+	flag = OFF;
+	while(r!=NULL){
+		if(r->Course_Number==number){
+			l->next = r->next;
+			free(r);
+			flag = ON;
+			break;
+		}
+		l = r;
+		r = r->next;
+	}
+	if(flag){
+		printf("delete success!\n");
+	}else{
+		printf("cannot find\n");
+	}
 }

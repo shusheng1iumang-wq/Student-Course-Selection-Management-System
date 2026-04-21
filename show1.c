@@ -91,3 +91,17 @@ void clean_ssl(S_Student_List *wall){
 	for(i=0;i<2;i++) wall->elective_credits[i]=0;
 	wall->next=NULL;
 }
+
+void show_cl_item(Class_List *p){
+	printf("Course Number:%d\n",p->Course_Number);
+	printf("Course Name:%s\n",p->Course_Name);
+	printf("Credit:%.1lf\n",p->Credits);
+	printf("Lecturer:%s\n",p->Lecturer);
+	printf("Max_Seats:%d\n",p->Max_Enrollment);
+	printf("Category:");
+	if(p->Category){
+		printf("SS\n");
+	}else{
+		printf("HSS\n");
+	}
+}
