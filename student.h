@@ -60,7 +60,7 @@ S_Student_List *Search_Student_ID(S_Student_List*,lli s_id); //遍历寻找Id
 
 S_Student_List *Inquiry_User(S_Student_List *ssl_head);  //询问用户，开始界面
 
-void free_malloc_list(S_Student_List* ssl_head);  //free_malloc
+void free_malloc_ssl_list(S_Student_List* ssl_head);  //free_malloc
 
 
 #endif

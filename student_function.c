@@ -157,7 +157,7 @@ void Insert_account(S_Student_List* ssl_head,S_Student_List *p){
 	p->next = r;
 }
 
-void free_malloc_list(S_Student_List* ssl_head){
+void free_malloc_ssl_list(S_Student_List* ssl_head){
 	S_Student_List* r=ssl_head->next;
 	
 	while(r){

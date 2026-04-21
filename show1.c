@@ -5,15 +5,18 @@
 
 void show_admin_menu(void){
 	printf("Operation menu:\n");
-	printf("0->class:\n");
-	printf("1->student:\n");
+	printf("0->class\n");
+	printf("1->student\n");
+	printf("2->exit\n");
 	printf("Your choose:");
 }
 void show_admin_class_menu(void){
 	printf("Class_operation_menu:\n");
-	printf("0->Course_Entry:\n");
-	printf("1->Browse Courses:\n");
-	printf("2->Delete Course:\n");
+	printf("0->Course_Entry\n");
+	printf("1->Browse Courses\n");
+	printf("2->Delete Course\n");
+	printf("3->go back\n");
+	printf("4->exit\n");
 	printf("Your choose:");
 }
 
@@ -30,7 +33,10 @@ void Save_SSL(S_Student_List *ssl_head){
 	while(r!=NULL){
 		l=r;
 		r=r->next;
-		fwrite(l,sizeof(S_Student_List)-sizeof(ssl_head->next),1,fp);
+		if((fwrite(l,sizeof(S_Student_List)-sizeof(ssl_head->next),1,fp))!=1){
+			printf("fwrite error!\n");
+			exit(1);	
+		}
 	}
 	
 	fclose(fp);

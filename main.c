@@ -13,7 +13,7 @@ S_Student_List ssl_head={
 	STUDENT_ID_LINE,"admin","Your_father",
 };
 
-
+Class_List cl_head={0,};
 
 int main(int argc, char *argv[]) {
 	S_Student_List *p=NULL;
@@ -31,9 +31,12 @@ int main(int argc, char *argv[]) {
 		scanf("%d",&i);
 		switch(i){
 			case 0:
-				admin_class_menu();
+				admin_class_menu(&cl_head);
 				break;
 			case 1:
+				break;
+			case 2:
+				exit(1);
 				break;
 			default:
 				break;
@@ -47,7 +50,7 @@ int main(int argc, char *argv[]) {
 	Save_SSL(&ssl_head);
 	
 	//释放
-	free_malloc_list(&ssl_head);
+	free_malloc_ssl_list(&ssl_head);
 	
 	return 0;
 }
