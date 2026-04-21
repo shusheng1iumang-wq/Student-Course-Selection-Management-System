@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=2
 CompilerSettings=0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;0;1;0;0;0;0;0;0;0
-UnitCount=7
+UnitCount=6
 
 [VersionInfo]
 Major=1
@@ -90,7 +90,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit8]
+FileName=class.h
+
+[Unit5]
 FileName=show1.c
 CompileCpp=0
 Folder=
@@ -100,21 +103,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
-FileName=class.h
-
-[Unit5]
+[Unit6]
 FileName=class.c
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=class.h
 CompileCpp=0
 Folder=
 Compile=1

@@ -47,6 +47,7 @@ void Read_SSl(S_Student_List *ssl_head){
 	char* file_ssl="Student_list.txt";
 	S_Student_List temp_ssl;
 	S_Student_List *head = ssl_head;
+	S_Student_List* next;
 	
 	if((fp=fopen(file_ssl,"rb"))==NULL){
 		printf("%s fread error!\n",file_ssl);
@@ -54,12 +55,16 @@ void Read_SSl(S_Student_List *ssl_head){
 	}
 	
 	while(fread(&temp_ssl,sizeof(S_Student_List)-sizeof(ssl_head->next),1,fp)==1){
-		S_Student_List* next = (S_Student_List*)malloc(sizeof(S_Student_List));
+		if((next = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
+			printf("read_ssl malloc error!\n");
+			exit(1);
+		};
 		copy_ssl(&temp_ssl,next);
 		head->next = next;
 		head = next;
 	}
 	
+	fclose(fp);
 	
 }
 

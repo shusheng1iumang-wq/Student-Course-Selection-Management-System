@@ -1,6 +1,7 @@
 #ifndef __SHOW_HEAD__  
 #define __SHOW_HEAD__
 #include"student.h"
+#include"class.h"
 
 void show_admin_menu(void);     //管理员菜单分类
 void show_admin_class_menu(void);   //管理员课程菜单

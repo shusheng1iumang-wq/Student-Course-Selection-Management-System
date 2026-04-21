@@ -27,20 +27,22 @@ int main(int argc, char *argv[]) {
 	if(p==&ssl_head){
 		//管理员
 		printf("Welcome,%s!\n",p->name);
-		show_admin_menu();
-		scanf("%d",&i);
-		switch(i){
-			case 0:
-				admin_class_menu(&cl_head);
-				break;
-			case 1:
-				break;
-			case 2:
-				exit(1);
-				break;
-			default:
-				break;
-		}
+		do{
+			show_admin_menu();
+			scanf("%d",&i);
+			switch(i){
+				case 0:
+					admin_class_menu(&cl_head);
+					break;
+				case 1:
+					break;
+				case 2:
+					exit(1);
+					break;
+				default:
+					break;
+			}
+		}while(1);
 	}else{
 		//学生
 		printf("Welcome,User:%s",p->name);	

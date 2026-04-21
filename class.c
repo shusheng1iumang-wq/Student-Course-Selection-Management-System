@@ -8,6 +8,7 @@ void admin_class_menu(Class_List *cl_head){
 	
 	show_admin_class_menu();
 	scanf("%d",&i);
+	read_cl_list(cl_head);
 	
 	switch(i){
 		case 0:
@@ -30,7 +31,6 @@ void admin_class_menu(Class_List *cl_head){
 
 void Course_Entry(Class_List* cl_head){
 	Class_List *p=NULL;
-	Class_List *head = cl_head;
 	Class_List *temp=NULL;
 	int i;
 	char out=0;
@@ -56,13 +56,17 @@ void Course_Entry(Class_List* cl_head){
 				printf("What do you want?\n");
 				printf("0->delete\n");
 				printf("1->re-entry\n");
+				printf("2->exit\n");
 				printf("Your choose:");
 				scanf("%d",&i);getchar();
-			}while(i!=0&&i!=1);
+			}while(i!=0&&i!=1&&i!=2);
 			if(i==0){
 				delete_cl_item(cl_head,p->Course_Number);
 			}else if(i==1){
 				goto re_entry;
+			}else if(i==2){
+				free(p);
+				return;
 			}	
 		}
 		
@@ -93,7 +97,7 @@ void Course_Entry(Class_List* cl_head){
 		p->Category = i;
 		p->next=NULL;
 		
-		Insert_class(p,head);
+		Insert_class(p,cl_head);
 		
 		getchar();
 		printf("continue?(y/n)");
@@ -101,25 +105,10 @@ void Course_Entry(Class_List* cl_head){
 		if(out=='n'||out=='N')flag=OFF;
 		
 	}while(flag);
-	
-	printf("------Saving Now------\n");
-	if((fp=fopen(cl_file,"wb"))==NULL){
-		printf("fopen error!\n");
-		exit(1);
-	}
-	while(head!=NULL){
-		p = head ;
-		head = head->next;
-		if((fwrite(p,sizeof(Class_List)-sizeof(p->next),1,fp))!=1){
-			printf("fwrite error!\n");
-			exit(1);
-		}
-	}
-	
-	printf("------Finshed------\n");
+
+	save_cl_list(cl_head);
 	
 	free_malloc_cl_list(cl_head);
-//接下来写read函数，然后还是要在插入功能上查一下是否课程号重复，不然容易重复保存。
 	
 	fclose(fp);
 	
@@ -178,4 +167,63 @@ void delete_cl_item(Class_List* cl_head,int number){
 	}else{
 		printf("cannot find\n");
 	}
+}
+
+void save_cl_list(Class_List *cl_head){
+	FILE *fp=NULL;
+	char *cl_file = "class_list.txt";
+	Class_List *p = NULL;
+	Class_List *head = cl_head;
+	
+	if((fp=fopen(cl_file,"wb"))==NULL){
+		printf("fopen error!\n");
+		exit(1);
+	}
+	while(head!=NULL){
+		p = head ;
+		head = head->next;
+		if((fwrite(p,sizeof(Class_List)-sizeof(p->next),1,fp))!=1){
+			printf("fwrite error!\n");
+			exit(1);
+		}
+	}
+	
+}
+
+void read_cl_list(Class_List *cl_head){
+	FILE *fp=NULL;
+	char *cl_file = "class_list.txt";
+	Class_List *p = NULL;
+	Class_List temp_cl ={0};
+	
+	if((fp=fopen(cl_file,"rb"))==NULL){
+		printf("%s fopen error!\n",cl_file);
+		exit(1);
+	}
+	
+	while((fread(&temp_cl,sizeof(Class_List)-sizeof(temp_cl.next),1,fp))==1){
+		if((p=(Class_List*)malloc(sizeof(Class_List)))==NULL){
+			printf("read_cl_list malloc error!\n");
+			exit(1);
+		}
+		copy_cl(&temp_cl,p);
+		p->next = NULL;
+		cl_head->next = p;
+		cl_head = cl_head->next;
+	}
+	
+	fclose(fp);
+}
+
+void copy_cl(Class_List* paste,Class_List *Wall){
+	
+	
+	Wall->Course_Number = paste->Course_Number;	
+	cpystring(paste->Course_Name,Wall->Course_Name,COURSE_NAME_LINE);
+	Wall->Credits = paste->Credits;
+	cpystring(paste->Lecturer,Wall->Lecturer,NAME_LINE);
+	Wall->Max_Enrollment = paste->Max_Enrollment;
+	Wall->Current_Students = paste->Current_Students;
+	Wall->Category =paste->Category;
+	
 }
