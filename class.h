@@ -5,13 +5,13 @@
 
 
 typedef struct CLASS_LIST{
-	int Course_Number;   //课程号
-	char Course_Name[COURSE_NAME_LINE];  //课程名
-	double Credits;   //学分
-	char Lecturer[NAME_LINE];   //教师
-	int Max_Enrollment;   //限制
-	int Current_Students;  //现在
-	Bool Category;   //类别
+	int Course_Number;   
+	char Course_Name[COURSE_NAME_LINE];  
+	double Credits;   
+	char Lecturer[NAME_LINE];   
+	int Max_Enrollment;   
+	int Current_Students;  
+	Bool Category;   
 	struct CLASS_LITS *next;
 }Class_List;
 
@@ -24,6 +24,7 @@ void free_malloc_cl_list(Class_List* cl_head);
 void Insert_class(Class_List* p,Class_List *head);
 void admin_class_menu(Class_List*);
 void Course_Entry(Class_List*);
+void Browse_Courses(Class_List *cl_head);
 
 
 

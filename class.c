@@ -6,27 +6,31 @@
 void admin_class_menu(Class_List *cl_head){
 	int i=0;
 	
-	show_admin_class_menu();
-	scanf("%d",&i);
-	read_cl_list(cl_head);
-	
-	switch(i){
-		case 0:
-			Course_Entry(cl_head);
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			return;
-			break;
-		case 4:
-			exit(1);
-			break;
-		default:
-			break;
-	}
+	do{
+		show_admin_class_menu();
+		scanf("%d",&i);
+		read_cl_list(cl_head);
+		switch(i){
+			case 0:
+				Course_Entry(cl_head);
+				break;
+			case 1:
+				Browse_Courses(cl_head);
+				break;
+			case 2:
+				break;
+			case 3:
+				free_malloc_cl_list(cl_head);
+				return;
+				break;
+			case 4:
+				free_malloc_cl_list(cl_head);
+				exit(1);
+				break;
+			default:
+				break;
+		}
+	}while(1);
 }
 
 void Course_Entry(Class_List* cl_head){
@@ -107,8 +111,6 @@ void Course_Entry(Class_List* cl_head){
 	}while(flag);
 
 	save_cl_list(cl_head);
-	
-	free_malloc_cl_list(cl_head);
 	
 	fclose(fp);
 	
@@ -226,4 +228,22 @@ void copy_cl(Class_List* paste,Class_List *Wall){
 	Wall->Current_Students = paste->Current_Students;
 	Wall->Category =paste->Category;
 	
+}
+
+void Browse_Courses(Class_List *cl_head){
+	Class_List* r=cl_head->next;
+	
+	printf("Course Number | Course Name | Credits | Lecturer | Seats | Category |\n");
+	
+	while(r!=NULL){
+		printf("%14d|",r->Course_Number);
+		printf("%13s|",r->Course_Name);
+		printf("%9.1f|",r->Credits);
+		printf("%10s|",r->Lecturer);
+		printf("%3d/%3d|",r->Current_Students,r->Max_Enrollment);
+		if(r->Category)printf("%10s","SS");
+		else printf("%10s","HSS");
+		printf("\n");
+		r=r->next;
+	}
 }
