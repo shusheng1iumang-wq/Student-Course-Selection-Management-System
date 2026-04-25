@@ -3,14 +3,15 @@
 #include "student.h"
 #include "class.h"
 
-void show_student_menu(void);                                //Ñ§Éú²Ëµ¥½çÃæ
-void show_admin_student_menu(void);							//¹ÜÀíÔ±¹ÜÀíÑ§Éú²Ëµ¥½çÃæ
-void show_admin_menu(void);                                 // ¹ÜÀíÔ±²Ëµ¥·ÖÀà
-void show_admin_class_menu(void);                           // ¹ÜÀíÔ±¿Î³Ì²Ëµ¥
-void Save_SSL(S_Student_List *ssl_head);                    // ±£´æssl£¬Í¨³£ÔÚshowÖ®ºó
-void Read_SSL(S_Student_List *ssl_head);                    // ¶ÁÈ¡ssl£¬Í¨³£ÔÚshowÖ®Ç°
-void copy_ssl(S_Student_List *paste, S_Student_List *wall); // ¸´ÖÆssl
-void clean_ssl_item(S_Student_List *wall);                  // Çå¿ÕÏÂ£¬³õÊ¼»¯ssl
+void fresh_file(char* file);                                  //æ¸…ç©ºæ–‡ä»¶
+void show_student_menu(void);                                //å­¦ç”Ÿèœå•ç•Œé¢
+void show_admin_student_menu(void);							//ç®¡ç†å‘˜ç®¡ç†å­¦ç”Ÿèœå•ç•Œé¢
+void show_admin_menu(void);                                 // ç®¡ç†å‘˜èœå•åˆ†ç±»
+void show_admin_class_menu(void);                           // ç®¡ç†å‘˜è¯¾ç¨‹èœå•
+void Save_SSL(S_Student_List *ssl_head);                    // ä¿å­˜sslï¼Œé€šå¸¸åœ¨showä¹‹å
+void Read_SSL(S_Student_List *ssl_head);                    // è¯»å–sslï¼Œé€šå¸¸åœ¨showä¹‹å‰
+void copy_ssl(S_Student_List *paste, S_Student_List *wall); // å¤åˆ¶ssl
+void clean_ssl_item(S_Student_List *wall);                  // æ¸…ç©ºä¸‹ï¼Œåˆå§‹åŒ–ssl
 void show_cl_item(Class_List *p);
 
 #endif

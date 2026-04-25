@@ -20,8 +20,9 @@ void show_admin_student_menu(void)
     printf("0->Student Entry\n");
     printf("1->Browse Students\n");
     printf("2->Delete Student account\n");
-    printf("3->go back\n");
-    printf("4->exit\n");
+    printf("3->Fresh the file\n");
+    printf("4->go back\n");
+    printf("5->exit\n");
     printf("Your choose:");
 }
 
@@ -39,8 +40,9 @@ void show_admin_class_menu(void)
     printf("0->Course_Entry\n");
     printf("1->Browse Courses\n");
     printf("2->Delete Course\n");
-    printf("3->go back\n");
-    printf("4->exit\n");
+    printf("3->Fresh the file\n");
+    printf("4->go back\n");
+    printf("5->exit\n");
     printf("Your choose:");
 }
 
@@ -155,4 +157,20 @@ void show_cl_item(Class_List *p)
     {
         printf("HSS\n");
     }
+}
+
+void fresh_file(char* file){
+	char out = 0;
+	
+	printf("Are you sure?(y/n)");
+    out = getchar();
+    if(out=='y'||out=='Y'){
+       	if(remove(file)!=0){
+        	printf("remove error.\n");
+        }else{
+			if((fopen(file,"wb"))==NULL){
+				printf("fopen error.\n");
+			}else printf("finshed.\n");
+		}
+	}
 }

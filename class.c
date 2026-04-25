@@ -8,6 +8,8 @@ void admin_class_menu(Class_List *cl_head)
     int i = 0;
     char out = 0;
     Class_List *temp = NULL;
+    FILE* fp=NULL;
+    char* cl_file="class_list.txt";
 
     do
     {
@@ -24,7 +26,7 @@ void admin_class_menu(Class_List *cl_head)
             Browse_Courses(cl_head);
             break;
         case 2:
-            do
+			do
             {
                 printf("Input the Course Number to delete:");
                 scanf("%d", &i);
@@ -63,12 +65,16 @@ void admin_class_menu(Class_List *cl_head)
                 if (out == 'y' || out == 'Y')
                     flag = ON;
             } while (flag);
+            //有空优化一下，程序可读性差了
             break;
         case 3:
+			 fresh_file(cl_file);
+        	break;
+        case 4:
             free_malloc_cl_list(cl_head);
             return;
             break;
-        case 4:
+        case 5:
             free_malloc_cl_list(cl_head);
             exit(1);
             break;
@@ -129,7 +135,7 @@ void Course_Entry(Class_List *cl_head)
                 free(p);
                 return;
             }
-            //��һ��do while�����Ż�һ��
+            //ÕâÒ»¶Îdo while¿ÉÒÔÓÅ»¯Ò»ÏÂ
         }
 
         printf("Course Name:");

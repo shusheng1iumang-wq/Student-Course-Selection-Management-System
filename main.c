@@ -7,6 +7,8 @@
 #include "admin_student.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
+#include<windows.h>
+
 // 头部空节点，工程优化！
 S_Student_List ssl_head = {
     STUDENT_ID_LINE,
@@ -21,6 +23,7 @@ Class_List cl_head = {
 
 int main(int argc, char *argv[])
 {
+	SetConsoleOutputCP(65001);
     S_Student_List *p = NULL;
     int i = 0;
     S_Student_List student_temp ={0};

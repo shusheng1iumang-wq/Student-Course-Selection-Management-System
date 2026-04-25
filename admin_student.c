@@ -7,11 +7,13 @@
 void admin_student_menu(S_Student_List *ssl_head)
 {
     int i = 0;
+    char *ssl_file="Student_list.txt";
 
     do
     {
         show_admin_student_menu();
         scanf("%d", &i);
+        getchar();
         Read_SSL(ssl_head);
         switch (i)
         {
@@ -27,10 +29,13 @@ void admin_student_menu(S_Student_List *ssl_head)
 	        	Save_SSL(ssl_head);
 	            break;
 	        case 3:
+	        	fresh_file(ssl_file);
+	        	break;
+	        case 4:
 	        	free_malloc_ssl_list(ssl_head);
 	        	return;
 	            break;
-	        case 4:
+	        case 5:
 	        	free_malloc_ssl_list(ssl_head);
 	        	exit(0);
 	            break;

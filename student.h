@@ -12,8 +12,9 @@
 #define MAX_SCORE 6               // 分数分配多
 #define MIN_SCORE 3               // 分数分配少
 
-typedef enum{ OFF,ON}BOOL;    // 自定义开关
-BOOL flag; // 全局开关
+typedef enum{ OFF,ON}Bool;    
+/*自定义开关*/
+Bool flag; // 全局开关
 
 // long long int
 typedef long long int lli;
@@ -46,8 +47,8 @@ void clean_the_history(S_Student_List *p); // 将选课历史清空
 void give_elective_credits(S_Student_List *p, int major_code); // 根据专业代号分配选课分数
 void cpystring(char *paste, char *wall, int size); // 自定义复制字符串函数
 void fgets_demo(char *string); // fgets补丁，去掉'\n'
-BOOL key2key(char *key, char *key_input); // 字符串对比，用来比对密码
-BOOL password_security(char *key); // 确定密码限制
+Bool key2key(char *key, char *key_input); // 字符串对比，用来比对密码
+Bool password_security(char *key); // 确定密码限制
 void Insert_account(S_Student_List *ssl_head, S_Student_List *p); // 根据学号插入用户
 S_Student_List *Set_Up_Student_Account(S_Student_List *ssl_head, lli s_id); // 建立学生用户
 S_Student_List *Search_Student_ID(S_Student_List *, lli s_id); // 遍历寻找Id

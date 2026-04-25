@@ -5,9 +5,9 @@
 
 
 /*
-±¾À´Ïë²ÉÓÃ½¨Á¢Ò»¸öÊý¾Ý¿â£¬¸øÃ¿¸öÑ§ÉúµÄid¶¼ÌîÉÏµÄ£¬
-²¢ÇÒÉèÖÃ³õÊ¼ÃÜÂë£¬µ«ÊÇ°É£¬Òª»¨ºÜ³¤Ê±¼ä£¬¶øÇÒÒª¶¼ÊÇÖØ¸´µÄ¹¤×÷£¬
-ËùÒÔÎÒÑ¡ÔñÔÚ¿ÕÁ´±íÉÏÂýÂýÌí¼ÓÃ¿Ò»¸ö×¢²áµÄÑ§Éú¡£
+æœ¬æ¥æƒ³é‡‡ç”¨å»ºç«‹ä¸€ä¸ªæ•°æ®åº“ï¼Œç»™æ¯ä¸ªå­¦ç”Ÿçš„idéƒ½å¡«ä¸Šçš„ï¼Œ
+å¹¶ä¸”è®¾ç½®åˆå§‹å¯†ç ï¼Œä½†æ˜¯å§ï¼Œè¦èŠ±å¾ˆé•¿æ—¶é—´ï¼Œè€Œä¸”è¦éƒ½æ˜¯é‡å¤çš„å·¥ä½œï¼Œ
+æ‰€ä»¥æˆ‘é€‰æ‹©åœ¨ç©ºé“¾è¡¨ä¸Šæ…¢æ…¢æ·»åŠ æ¯ä¸€ä¸ªæ³¨å†Œçš„å­¦ç”Ÿã€‚
 */
 
 // function of inquiry for new users
@@ -174,8 +174,8 @@ void fgets_demo(char* string){
 	if(string[length]=='\n')string[length]=0;
 }
 
-BOOL key2key(char *key,char *key_input){
-	BOOL flag=ON;
+Bool key2key(char *key,char *key_input){
+	Bool flag=ON;
 	int i;
 	
 	if(strlen(key)==strlen(key_input)){
@@ -190,10 +190,10 @@ BOOL key2key(char *key,char *key_input){
 	return flag;
 }
 
-BOOL password_security(char* key){
-	BOOL flag=OFF;
+Bool password_security(char* key){
+	Bool flag=OFF;
 	int i=0;
-	BOOL uppercase=OFF,
+	Bool uppercase=OFF,
 		lowercase=OFF,
 		others=OFF;
 		
@@ -226,7 +226,7 @@ void cpystring(char *paste,char *wall,int size){
 }
 
 void give_elective_credits(S_Student_List* p,int major_code){
-	//ÏÈ¼òµ¥µÄÐ´Ò»¸öÂß¼­À´´úÌæ£¬Èç¹ûÓÐ¿Õ²é×ÊÁÏÎÒÔÙÀ´×ö
+	//å…ˆç®€å•çš„å†™ä¸€ä¸ªé€»è¾‘æ¥ä»£æ›¿ï¼Œå¦‚æžœæœ‰ç©ºæŸ¥èµ„æ–™æˆ‘å†æ¥åš
 	if(major_code%2){
 		p->elective_credits[HSS][0]=MAX_SCORE;
 		p->elective_credits[SS][0]=MIN_SCORE;

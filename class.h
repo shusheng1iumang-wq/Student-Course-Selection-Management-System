@@ -1,3 +1,4 @@
+
 #ifndef __CLASS_HEAD__
 #define __CLASS_HEAD__
 #define COURSE_NAME_LINE 100
@@ -11,7 +12,7 @@ typedef struct CLASS_LIST
     char Lecturer[NAME_LINE];
     int Max_Enrollment;
     int Current_Students;
-    BOOL Category;
+    Bool Category;
     struct CLASS_LIST *next;
 } Class_List;
 
