@@ -68,19 +68,25 @@ void admin_class_menu(Class_List *cl_head)
             //有空优化一下，程序可读性差了
             break;
         case 3:
-			 fresh_file(cl_file);
+			fresh_file(cl_file);
         	break;
         case 4:
+        	open_s_c_selection(cl_head);
+        	break;
+        case 5:
             free_malloc_cl_list(cl_head);
             return;
             break;
-        case 5:
+        case 6:
             free_malloc_cl_list(cl_head);
             exit(1);
             break;
         default:
             break;
         }
+        
+        free_malloc_cl_list(cl_head);   //及时释放内存
+        
     } while (1);
 }
 
@@ -279,13 +285,14 @@ void read_cl_list(Class_List *cl_head)
     char *cl_file = "class_list.txt";
     Class_List *p = NULL;
     Class_List temp_cl = {0};
+    Class_List cleaner={0};
 
     if ((fp = fopen(cl_file, "rb")) == NULL)
     {
         printf("%s fopen error!\n", cl_file);
         exit(1);
     }
-
+//清空一下cl，没有清空函数，暂时用cpy来代替一下，后面看看有没有必要写一个。
     while ((fread(&temp_cl, sizeof(Class_List) - sizeof(temp_cl.next), 1, fp)) == 1)
     {
         if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
@@ -297,6 +304,7 @@ void read_cl_list(Class_List *cl_head)
         p->next = NULL;
         cl_head->next = p;
         cl_head = cl_head->next;
+        copy_cl(&cleaner, &temp_cl); 
     }
 
     fclose(fp);
@@ -334,4 +342,29 @@ void Browse_Courses(Class_List *cl_head)
         printf("\n");
         r = r->next;
     }
+}
+
+void open_s_c_selection(Class_List *cl_head){
+	char out = 0;
+	
+	flag = OFF;
+	if(cl_head->Category==OFF){
+		flag = ON;
+		printf("STATE: CLOSE \n");
+	}else printf("STATE: OPEN \n");
+	
+	printf("Do you want to change?(y/n)");
+	out = getchar();
+	getchar();
+	
+	if(out=='y'||out=='Y'){
+		cl_head->Category = flag;	
+	}
+	
+	printf("STATE:");
+	if(cl_head->Category==OFF){
+		printf(" CLOSE \n");
+	}else printf(" OPEN \n");
+	
+	save_cl_list(cl_head);
 }

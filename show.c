@@ -41,8 +41,9 @@ void show_admin_class_menu(void)
     printf("1->Browse Courses\n");
     printf("2->Delete Course\n");
     printf("3->Fresh the file\n");
-    printf("4->go back\n");
-    printf("5->exit\n");
+    printf("4->Open student course selection\n");
+    printf("5->go back\n");
+    printf("6->exit\n");
     printf("Your choose:");
 }
 
@@ -161,6 +162,7 @@ void show_cl_item(Class_List *p)
 
 void fresh_file(char* file){
 	char out = 0;
+	FILE *fp=NULL;
 	
 	printf("Are you sure?(y/n)");
     out = getchar();
@@ -168,9 +170,11 @@ void fresh_file(char* file){
        	if(remove(file)!=0){
         	printf("remove error.\n");
         }else{
-			if((fopen(file,"wb"))==NULL){
+			if((fp=(fopen(file,"wb")))==NULL){
 				printf("fopen error.\n");
 			}else printf("finshed.\n");
 		}
 	}
+	
+	fclose(fp);   //更加安全
 }

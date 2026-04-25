@@ -12,6 +12,6 @@ void Save_SSL(S_Student_List *ssl_head);                    // 保存ssl，通�
 void Read_SSL(S_Student_List *ssl_head);                    // 读取ssl，通常在show之前
 void copy_ssl(S_Student_List *paste, S_Student_List *wall); // 复制ssl
 void clean_ssl_item(S_Student_List *wall);                  // 清空下，初始化ssl
-void show_cl_item(Class_List *p);
+void show_cl_item(Class_List *p);                          //展示cl元素
 
 #endif
