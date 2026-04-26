@@ -16,6 +16,8 @@ typedef struct CLASS_LIST
     struct CLASS_LIST *next;
 } Class_List;
 
+void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head);   //取消课程--学生
+void Course_registration(S_Student_List *student_temp,Class_List *cl_head);   //课程报名--学生
 void open_s_c_selection(Class_List *cl_head);     //选课开关！
 void copy_cl(Class_List *paste, Class_List *Wall);   //复制cl链表
 void read_cl_list(Class_List *cl_head);  //读取cl链表，文件读取

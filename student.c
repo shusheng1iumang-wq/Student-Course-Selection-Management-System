@@ -132,6 +132,7 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	clean_the_history(p);
 	
 	input_the_name(p);
+	fgets_demo(p->name);
 	
 	Insert_account(ssl_head,p);
 	
@@ -295,3 +296,39 @@ void del_ssl_item(S_Student_List *ssl_head,lli id){
 		r = r->next;
 	}
 }
+
+void view_course_grades(S_Student_List *p){
+	int i=0;
+	
+	printf("HSS course record:\n");
+	for(i=0;i<10;i++){
+		if(p->elective_record[HSS][i][0]!=0){
+			printf("course_num:%d",p->elective_record[HSS][i][0]);
+			if(p->elective_record[HSS][i][1]!=0){
+				printf("--%d\n",p->elective_record[HSS][i][1]);
+			}else{
+				printf("--The course has not been completed.\n");
+			}
+		}else{
+			break;
+		}
+	}
+	if(i==0)printf("No course record.\n");
+	
+	printf("SS course record:\n");
+	for(i=0;i<10;i++){
+		if(p->elective_record[SS][i][0]!=0){
+			printf("course_num:%d",p->elective_record[SS][i][0]);
+			if(p->elective_record[SS][i][1]!=0){
+				printf("--%d\n",p->elective_record[SS][i][1]);
+			}else{
+				printf("--The course has not been completed.\n");
+			}
+		}else{
+			break;
+		}
+	}
+	if(i==0)printf("No course record.\n");
+	//可以函数优化的，看情况吧。
+	
+} 

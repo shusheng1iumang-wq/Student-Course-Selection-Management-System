@@ -9,8 +9,8 @@
 #define KEY_BOTTOM_LINE 12        // 最小密码限制
 #define HSS 0                     // 人文社科
 #define SS 1                      // 自然科学
-#define MAX_SCORE 6               // 分数分配多
-#define MIN_SCORE 3               // 分数分配少
+#define MAX_SCORE 6.0               // 分数分配多
+#define MIN_SCORE 3.0               // 分数分配少
 
 typedef enum{ OFF,ON}Bool;    
 /*自定义开关*/
@@ -32,6 +32,7 @@ typedef struct STUDENT_LIST
     double elective_credits[2][2]; // 0 for HSS, 1 for SS
     // HSS-->Humanities and Social Sciences
     // SS-->Science and Technology
+    // 0 for max , 1 for now
     int elective_record[2][10][2]; // 0 for HSS, 1 for SS   
 	// 10个空间够用，后面想想怎么优化
 	//后面加入的功能，成绩功能。   0表示课程号  1表示成绩，成绩大于0就是结课     
@@ -39,6 +40,7 @@ typedef struct STUDENT_LIST
     struct STUDENT_LIST *next;
 } S_Student_List;
 
+void view_course_grades(S_Student_List *p);       //展示学生个人成绩
 void del_ssl_item(S_Student_List *ssl_head,lli id);   //删除学生元素
 void show_ssl_item(S_Student_List *p);    //展示学生元素
 void input_the_name(S_Student_List *p);   //输入姓名，因为要清空内存，所以我写了函数，

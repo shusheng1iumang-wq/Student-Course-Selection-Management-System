@@ -368,3 +368,125 @@ void open_s_c_selection(Class_List *cl_head){
 	
 	save_cl_list(cl_head);
 }
+
+void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
+	int number=0;
+	char out = 0;
+	Class_List* p =NULL;
+	int i = 0;
+	int count = 0;
+	
+	for(i=0;i<10;i++){
+		if(student_temp->elective_record[HSS][i][0]!=0&&student_temp->elective_record[HSS][i][1]==0){
+			count++;
+		}
+		if(student_temp->elective_record[SS][i][0]!=0&&student_temp->elective_record[SS][i][1]==0){
+			count++;
+		}
+	}
+	
+	if(count>=2){
+		printf("Personal course selection is full.\n");
+		return;
+	}
+	
+	if(cl_head->Category==OFF){
+		printf("Course selection channel has been closed.\n");
+		printf("Please wait for the administrator to enable it.\n");
+		return;
+	}
+	printf("Input the course number you want enter:");
+	scanf("%d",&number);getchar();
+	p = check_course_number(cl_head,number);
+	if(p==NULL){
+		printf("Sorry.Could not find the corresponding course number.\n");
+		return;
+	}
+	if(p->Max_Enrollment==p->Current_Students){
+		printf("Sorry.The course is fully enrolled.\n");
+		return;
+	}
+	printf("The course:\n");
+	show_cl_item(p);
+	printf("Are you sure?(y/n)");
+	out = getchar(); getchar();
+	if(out=='y'||out=='Y'){
+		count = HSS;
+		if(p->Category){
+			count = SS;
+		}
+		if(student_temp->elective_credits[count][0]<=student_temp->elective_credits[count][1]){
+			printf("Your course seletion score has met the course criteria.\n");
+			printf("It is recommended to enroll in courses of other categorise.\n");
+			printf("continue?(y/n)");
+			out = getchar();getchar();
+			if(out=='y'||out=='Y');
+			else {
+				printf("Go back now.\n");
+				return;
+			}
+		}
+		for(i=0;i<10;i++){
+			if(student_temp->elective_record[count][i][0]==0){
+				student_temp->elective_record[count][i][0]=number;
+				p->Current_Students++;
+				student_temp->elective_credits[count][1]+=p->Credits;
+				printf("finshed.\n");
+				break;
+			}
+		}
+		if(i==10)printf("The number of times for individual course selection has been reached.\n");
+	}
+	
+}
+
+void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
+	int i = 0 ;
+	int number = 0;
+	char out = 0;
+	int count = 0 ;
+	int* cnp[2] = {0};    //course_number_p
+	double *secp[2] = {0};  //student_elective_credits_p
+	Class_List *p = NULL;
+	
+	if(cl_head->Category==OFF){
+		printf("Course selection channel has been closed.\n");
+		printf("Please wait for the administrator to enable it.\n");
+		return;
+	}
+	
+	printf("The course you have chosen:\n");
+	for(i=0;i<10&&count<2;i++){
+		if(student_temp->elective_record[HSS][i][0]!=0&&student_temp->elective_record[HSS][i][1]==0){
+			printf("course_num:%d(HSS)\n",student_temp->elective_record[HSS][i][0]);
+			cnp[count] = &student_temp->elective_record[HSS][i][0];
+			secp[count++] = &student_temp->elective_credits[HSS][1];
+		}
+		if(student_temp->elective_record[SS][i][0]!=0&&student_temp->elective_record[SS][i][1]==0){
+			printf("course_num:%d(SS)\n",student_temp->elective_record[SS][i][0]);
+			cnp[count] = &student_temp->elective_record[SS][i][0];
+			secp[count++] = &student_temp->elective_credits[SS][1];
+		}
+	}
+	printf("Input the course number to cancel:");
+	scanf("%d",&number);getchar();
+	p = check_course_number(cl_head,number);
+	if(p==NULL){
+		printf("Cannot find.\n");
+		return;
+	}
+	printf("The course information:\n");
+	show_cl_item(p);
+	printf("Are you sure?(y/n)");
+	out = getchar(); getchar();
+	if(out=='y'||out=='Y'){
+		p->Current_Students--;
+		for(i=0;i<2;i++){
+			if(*cnp[i]==number){
+				*cnp[i]=0;
+				*secp[i]-=p->Credits;
+			}
+		}
+		printf("finshed.\n");
+	}
+}
