@@ -14,6 +14,7 @@
 //后面我要加入代号判断的功能。
 
 
+
 void admin_major_menu(Major_Code_List* mcl_head){
 	char* mcl_file="major_code_list.txt";
 	int i = 0;
@@ -127,9 +128,9 @@ void Browse_mcl(Major_Code_List* mcl_head){
 	printf("| Category | Major Code | Major Name\n");
 	while(r!=NULL){
 		if(r->Category){
-			printf("|%10s|","SS");
-		}else printf("|%10s|","HSS");
-		printf("%12s|",r->code);
+			printf("|%-10s|","SS");
+		}else printf("|%-10s|","HSS");
+		printf("%-12s|",r->code);
 		printf("%s\n",r->name);
 		r = r->next;
 	}

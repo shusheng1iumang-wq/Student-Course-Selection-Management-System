@@ -3,6 +3,9 @@
 #include "admin_student.h"
 #include "show.h"
 #include "student.h"
+#include"major_code.h"
+
+static Major_Code_List mcl_head;
 
 void admin_student_menu(S_Student_List *ssl_head)
 {
@@ -48,18 +51,18 @@ void Student_Entry(S_Student_List* ssl_head){
 	lli id=0;
 	char out=0;
 	S_Student_List *p=NULL;
+	Major_Code_List *mcl_p=NULL;
 	
 	do{
 		flag =OFF;
 		again:
 		printf("The Student ID:");
-		scanf("%lld",&id);
+		scanf("%lld",&id);getchar();
 		
 		p = Search_Student_ID(ssl_head,id);
 		if(p!=NULL){
 			printf("There had a same one:\n");
 			show_ssl_item(p);
-			getchar();
 			printf("Do you want to delete this?(y/n)");
 			scanf("%c",&out);
 			
@@ -82,10 +85,23 @@ void Student_Entry(S_Student_List* ssl_head){
 		p->ID = id;
 		cpystring("123456789&&Gdut",p->key,15);
 		printf("Major Code:");
-		scanf("%d",&p->major_code);
-		getchar();
+		fgets(p->major_code,CODE_LINE,stdin);
+		fgets_demo(p->major_code);
 		clean_the_history(p);
-		give_elective_credits(p,p->major_code);
+		
+		Read_major_code_list(&mcl_head,MCL_FILE);
+		mcl_p = Search_mcl_item_code(&mcl_head,p->major_code);
+		if(mcl_p==NULL){
+			printf("Could find this major_code.\n");
+			free(p);
+			free_malloc_mcl(&mcl_head);
+			printf("go back.\n");
+			return;
+		}
+		cpystring(mcl_p->name,p->major_name,COURSE_NAME_LINE);
+		give_elective_credits(mcl_p->Category,p); 
+		free_malloc_mcl(&mcl_head);
+		
 		printf("Name:");
 		fgets(p->name,NAME_LINE,stdin);
 		fgets_demo(p->name);
@@ -104,14 +120,15 @@ void Browse_Student(S_Student_List* ssl_head){
 	S_Student_List* p=ssl_head->next;
 	int i;
 	
-	printf("| Student ID | Student NAME | m_code |  HSS  |  SS   |\n");
+	printf("| Student ID | Student NAME | m_code |  HSS  |  SS   | major_name\n");
 	
 	while(p!=NULL){
 		printf("|%12lld|",p->ID);
 		printf("%14s|",p->name);
-		printf("%8d|",p->major_code);
-		printf("%3.1lf/%3.1lf|",p->elective_credits[HSS][1],p->elective_credits[0]);
-		printf("%3.1lf/%3.1lf|\n",p->elective_credits[SS][1],p->elective_credits[SS][0]);
+		printf("%8s|",p->major_code);
+		printf("%3.1lf/%3.1lf|",p->elective_credits[HSS][1],p->elective_credits[HSS][0]);
+		printf("%3.1lf/%3.1lf|",p->elective_credits[SS][1],p->elective_credits[SS][0]);
+		printf("%s\n",p->major_name);
 		printf("HSS record:");
 		for(i=0;i<10;i++){
 			if(p->elective_record[HSS][i][0]!=0){

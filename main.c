@@ -3,7 +3,6 @@
 #include <string.h>
 #include "student.h"
 #include "show.h"
-#include "class.h"
 #include "admin_student.h"
 #include "major_code.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */

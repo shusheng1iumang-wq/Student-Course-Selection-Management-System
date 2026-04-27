@@ -2,8 +2,7 @@
 #define __MAJOR_CODE_HEAD__
 //专业代号处理的头文件
 #include"student.h"
-#include"class.h"
-#define CODE_LINE 8
+#define MCL_FILE "major_code_list.txt"    //后续优化
 
 typedef struct MAJOR_CODE_LIST{
 	Bool Category;        //OFF for HSS ,ON for SS;

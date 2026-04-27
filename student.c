@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "student.h"
-
+#include"major_code.h"
 
 /*
 本来想采用建立一个数据库，给每个学生的id都填上的，
 并且设置初始密码，但是吧，要花很长时间，而且要都是重复的工作，
 所以我选择在空链表上慢慢添加每一个注册的学生。
 */
-
+static Major_Code_List mcl_head;
 // function of inquiry for new users
 S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 {	
@@ -79,10 +79,12 @@ S_Student_List *Search_Student_ID(S_Student_List* ssl_head,lli s_id){
 
 S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	S_Student_List *p=NULL;
+	Major_Code_List *mcl_p=NULL;
 	char key1[KEY_LINE]={0};
 	char key2[KEY_LINE]={0};
 	char out=0;
-	int major_code=0,i=0;
+	int i=0;
+	char major_code[CODE_LINE]={0}; 
 	
 	if((p = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
 		printf("malloc error!\n");
@@ -125,9 +127,25 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	}while(!flag);
 	
 	printf("Congratulation!\n");
-	printf("Your major code:");
-	scanf("%d",&major_code);getchar();
-	give_elective_credits(p,major_code);
+
+	Read_major_code_list(&mcl_head,MCL_FILE);	
+		
+	again_2:	
+		printf("Your major code:");
+		fgets(major_code,CODE_LINE,stdin);
+		fgets_demo(major_code);
+		mcl_p=Search_mcl_item_code(&mcl_head,major_code);
+		if(mcl_p==NULL){
+			printf("Could not fine your major code.\n");
+			goto again_2;
+		}
+	
+	cpystring(major_code,p->major_code,CODE_LINE);
+	cpystring(mcl_p->name,p->major_name,COURSE_NAME_LINE);
+	
+	give_elective_credits(mcl_p->Category,p);
+		
+	free_malloc_mcl(&mcl_head);
 	
 	clean_the_history(p);
 	
@@ -135,8 +153,6 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	fgets_demo(p->name);
 	
 	Insert_account(ssl_head,p);
-	
-
 	
 	return p;
 }
@@ -215,7 +231,7 @@ Bool password_security(char* key){
 void cpystring(char *paste,char *wall,int size){
 	int i=0;
 	
-	for(i=0;i<size;i++){
+	for(i=0;i<size;i++){                //我写了对wall的清空，可以用来清空很多东西
 		wall[i]=0;
 	}
 	
@@ -226,14 +242,14 @@ void cpystring(char *paste,char *wall,int size){
 	}
 }
 
-void give_elective_credits(S_Student_List* p,int major_code){
+void give_elective_credits(Bool category,S_Student_List*p){
 	//先简单的写一个逻辑来代替，如果有空查资料我再来做
-	if(major_code%2){
+	if(category){
 		p->elective_credits[HSS][0]=MAX_SCORE;
 		p->elective_credits[SS][0]=MIN_SCORE;
 	}else{
-		p->elective_credits[HSS][1]=MIN_SCORE;
-		p->elective_credits[SS][1]=MAX_SCORE;
+		p->elective_credits[HSS][0]=(MIN_SCORE+MAX_SCORE)/2.0;
+		p->elective_credits[SS][0]=(MIN_SCORE+MAX_SCORE)/2.0;
 	}
 }
 
@@ -265,9 +281,10 @@ void show_ssl_item(S_Student_List *p){
 	printf("Student ID:%lld\n",p->ID);
 	printf("Name:%s\n",p->name);
 	printf("Key:%s\n",p->key);
-	printf("Major Code:%d\n",p->major_code);
-	printf("HSS:%d/%d\n",p->elective_credits[HSS][1],p->elective_credits[HSS][0]);
-	printf("SS:%d/%d\n",p->elective_credits[SS][1],p->elective_credits[SS][0]);
+	printf("Major Code:%s\n",p->major_code);
+	printf("Major NAME:%s\n",p->major_name);
+	printf("HSS:%3.1lf/%3.1lf\n",p->elective_credits[HSS][1],p->elective_credits[HSS][0]);
+	printf("SS:%3.1lf/%3.1lf\n",p->elective_credits[SS][1],p->elective_credits[SS][0]);
 	printf("HSS record:\n");
 	for(i=0;i<10;i++){
 		if(p->elective_record[0][i][0]!=0){

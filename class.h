@@ -1,8 +1,7 @@
 
 #ifndef __CLASS_HEAD__
 #define __CLASS_HEAD__
-#define COURSE_NAME_LINE 100
-#include "student.h"
+
 
 typedef struct CLASS_LIST
 {

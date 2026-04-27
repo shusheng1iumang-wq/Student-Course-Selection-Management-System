@@ -118,12 +118,13 @@ void copy_ssl(S_Student_List *paste, S_Student_List *wall)
 {
     int i = 0;
     int j = 0;
-    clean_ssl_item(wall);
+    clean_ssl_item(wall);  //怀疑用不用
 
     wall->ID = paste->ID;
     cpystring(paste->name, wall->name, NAME_LINE);
     cpystring(paste->key, wall->key, KEY_LINE);
-    wall->major_code = paste->major_code;
+    cpystring(paste->major_code,wall->major_code,CODE_LINE);
+    cpystring(paste->major_name,wall->major_name,COURSE_NAME_LINE);
     for (i = 0; i < 2; i++)
         wall->elective_credits[i][0] = paste->elective_credits[i][0];
         wall->elective_credits[i][1] = paste->elective_credits[i][1];
@@ -146,7 +147,8 @@ void clean_ssl_item(S_Student_List *wall)
         wall->name[i] = 0;
     for (i = 0; i < KEY_LINE; i++)
         wall->key[i] = 0;
-    wall->major_code = 0;
+    cpystring("",wall->major_code,CODE_LINE);
+    cpystring("",wall->major_name,COURSE_NAME_LINE);
     for (i = 0; i < 2; i++){
         wall->elective_credits[i][0] = 0;
         wall->elective_credits[i][1] = 0;

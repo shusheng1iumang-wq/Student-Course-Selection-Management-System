@@ -1,3 +1,4 @@
+#include"student.h"
 #include "class.h"
 #include <stdio.h>
 #include <stdlib.h>
