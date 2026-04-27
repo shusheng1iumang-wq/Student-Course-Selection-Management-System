@@ -3,6 +3,17 @@
 #include <stdlib.h>
 #include "student.h"
 
+void show_major_code_menu(void){
+	printf("Major Code Operation Menu:\n");
+	printf("0->Browse Major Code\n");
+	printf("1->Entry Major Code\n");
+	printf("2->Delete Major Code\n");
+	printf("3->Fresh the File\n");
+	printf("4->Go back\n");
+	printf("5->Exit\n");
+	printf("Your choose:\n");
+}
+
 void show_student_menu(void){
 	printf("Operation menu:\n");
 	printf("0->Browse Course\n");
@@ -31,7 +42,8 @@ void show_admin_menu(void)
     printf("Operation menu:\n");
     printf("0->class\n");
     printf("1->student\n");
-    printf("2->exit\n");
+    printf("2->major code\n");
+    printf("3->exit\n");
     printf("Your choose:");
 }
 void show_admin_class_menu(void)

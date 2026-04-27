@@ -5,6 +5,7 @@
 #include "show.h"
 #include "class.h"
 #include "admin_student.h"
+#include "major_code.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 #include<windows.h>
@@ -20,6 +21,9 @@ Class_List cl_head = {
     0,
 };
 
+Major_Code_List mcl_head={
+	0 
+};
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +55,9 @@ int main(int argc, char *argv[])
                 admin_student_menu(p);
                 break;
             case 2:
+            	admin_major_menu(&mcl_head);
+            	break;
+            case 3:
                 exit(1);
                 break;
             default:

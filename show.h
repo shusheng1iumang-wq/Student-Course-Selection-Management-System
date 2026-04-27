@@ -3,6 +3,7 @@
 #include "student.h"
 #include "class.h"
 
+void show_major_code_menu(void);                              //专业号菜单--管理员
 void fresh_file(char* file);                                  //清空文件
 void show_student_menu(void);                                //学生菜单界面
 void show_admin_student_menu(void);							//管理员管理学生菜单界面
