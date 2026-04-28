@@ -329,12 +329,11 @@ void Browse_Courses(Class_List *cl_head)
 {
     Class_List *r = cl_head->next;
 
-    printf("Course Number | Course Name | Credits | Lecturer | Seats | Category |\n");
+    printf("Course Number | Credits | Lecturer | Seats | Category |Course Name\n");
 
     while (r != NULL)
     {
         printf("%14d|", r->Course_Number);
-        printf("%13s|", r->Course_Name);
         printf("%9.1f|", r->Credits);
         printf("%10s|", r->Lecturer);
         printf("%3d/%3d|", r->Current_Students, r->Max_Enrollment);
@@ -342,6 +341,7 @@ void Browse_Courses(Class_List *cl_head)
             printf("%10s", "SS");
         else
             printf("%10s", "HSS");
+        printf("|%s",r->Course_Name);
         printf("\n");
         r = r->next;
     }
