@@ -296,8 +296,18 @@ void read_cl_list(Class_List *cl_head)
         exit(1);
     }
 //清空一下cl，没有清空函数，暂时用cpy来代替一下，后面看看有没有必要写一个。
+	flag = ON;
+	
     while ((fread(&temp_cl, sizeof(Class_List) - sizeof(temp_cl.next), 1, fp)) == 1)
-    {
+    {	
+    	if(flag){
+    		flag = OFF;
+    		copy_cl(&temp_cl,cl_head);
+    		cl_head->next = NULL;
+    		copy_cl(&cleaner,&temp_cl);
+    		continue;
+		}
+    	
         if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
         {
             printf("read_cl_list malloc error!\n");
