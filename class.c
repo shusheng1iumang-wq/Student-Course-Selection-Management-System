@@ -75,10 +75,12 @@ void admin_class_menu(Class_List *cl_head)
         	open_s_c_selection(cl_head);
         	break;
         case 5:
+        //	course_completion(cl_head);
+        case 6:
             free_malloc_cl_list(cl_head);
             return;
             break;
-        case 6:
+        case 7:
             free_malloc_cl_list(cl_head);
             exit(1);
             break;

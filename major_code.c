@@ -152,6 +152,7 @@ void free_malloc_mcl(Major_Code_List* mcl_head){
 void Entry_Major_Code(Major_Code_List* mcl_head){
 	char out = 0;
 	Major_Code_List* p =NULL;
+	int c= 0;
 	
 	do{
 	
@@ -159,8 +160,8 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		clean_mcl_item(p);
 		printf("Input the Major:\n");
 		printf("Major Code:");
-		fgets(p->code,CODE_LINE,stdin);
-		fgets_demo(p->code);
+		scanf("%8s",p->code);
+		while((c=getchar())!='\n'&&c!=EOF);
 		printf("Major Name:");
 		fgets(p->name,COURSE_NAME_LINE,stdin);
 		fgets_demo(p->name);

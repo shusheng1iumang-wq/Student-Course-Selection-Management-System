@@ -54,8 +54,9 @@ void show_admin_class_menu(void)
     printf("2->Delete Course\n");
     printf("3->Fresh the file\n");
     printf("4->Open student course selection\n");
-    printf("5->go back\n");
-    printf("6->exit\n");
+    printf("5->Course completion and student score entry.\n");
+    printf("6->go back\n");
+    printf("7->exit\n");
     printf("Your choose:");
 }
 

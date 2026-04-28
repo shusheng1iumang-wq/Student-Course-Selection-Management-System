@@ -2,7 +2,7 @@
 #define _STUDENT_HEAD_
 
 #define COURSE_NAME_LINE 100  
-#define CODE_LINE 8            //code_line
+#define CODE_LINE 24            //code_line
 #define STUDENT_ID_LINE 999999999 // s_id test
 #define THE_TRY_LINE 10           // 尝试次数限制
 #define TIP_TIME 5                // 提示次数线
