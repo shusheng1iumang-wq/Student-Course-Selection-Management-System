@@ -243,7 +243,7 @@ void cpystring(char *paste,char *wall,int size){
 }
 
 void give_elective_credits(Bool category,S_Student_List*p){
-	//先简单的写一个逻辑来代替，如果有空查资料我再来做
+	
 	if(category){
 		p->elective_credits[HSS][0]=MAX_SCORE;
 		p->elective_credits[SS][0]=MIN_SCORE;

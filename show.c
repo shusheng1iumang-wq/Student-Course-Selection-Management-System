@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "student.h"
+#include<errno.h>
+
+extern Bool Open_Student_Course;
 
 void show_major_code_menu(void){
 	printf("Major Code Operation Menu:\n");
@@ -192,4 +195,40 @@ void fresh_file(char* file){
 	}
 	
 	fclose(fp);   //更加安全
+}
+
+void read_Open_Student_Course(void){
+	FILE* fp=NULL;
+	
+	again2:
+	if((fp=fopen(OPEN_FILE,"rb"))==NULL){
+		if(errno==ENOENT){
+			save_Open_Student_Course();
+			goto again2;
+		}else{
+			printf("fopen %s file error\n",OPEN_FILE);
+			exit(1);
+		}
+	}
+	
+	if((fread(&Open_Student_Course,sizeof(Bool),1,fp))!=1){
+		printf("fread error!");
+	}
+	fclose(fp);
+}
+
+void save_Open_Student_Course(void){
+	FILE *fp=NULL;
+	
+	if((fp=fopen(OPEN_FILE,"wb"))==NULL){
+		printf("%s file fopen error!\n",OPEN_FILE);
+		exit(1);
+	}
+	
+	if((fwrite(&Open_Student_Course,sizeof(Bool),1,fp))!=1){
+		printf("fwrite %s file error.\n",OPEN_FILE);
+		exit(1);
+	}
+	
+	fclose(fp);
 }

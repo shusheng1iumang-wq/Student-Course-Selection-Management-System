@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "show.h"
 
+extern Bool Open_Student_Course;
+
 void admin_class_menu(Class_List *cl_head)
 {
     int i = 0;
@@ -18,6 +20,7 @@ void admin_class_menu(Class_List *cl_head)
         scanf("%d", &i);
         getchar();
         read_cl_list(cl_head);
+        read_Open_Student_Course();
         switch (i)
         {
         case 0:
@@ -72,7 +75,7 @@ void admin_class_menu(Class_List *cl_head)
 			fresh_file(cl_file);
         	break;
         case 4:
-        	open_s_c_selection(cl_head);
+        	open_s_c_selection();
         	break;
         case 5:
         //	course_completion(cl_head);
@@ -101,6 +104,7 @@ void Course_Entry(Class_List *cl_head)
     char out = 0;
     FILE *fp = NULL;
     char *cl_file = "class_list.txt";
+    char c=0;
 
     flag = ON;
 
@@ -149,8 +153,8 @@ void Course_Entry(Class_List *cl_head)
 
         printf("Course Name:");
         cpystring("", p->Course_Name, COURSE_NAME_LINE); //     ? 
-        fgets(p->Course_Name, COURSE_NAME_LINE, stdin);
-        fgets_demo(p->Course_Name);
+        scanf("%100s",p->Course_Name);
+		while((c=getchar())!='\n'&&c!=EOF);
 
         printf("Credits:");
         scanf("%lf", &p->Credits);
@@ -158,8 +162,8 @@ void Course_Entry(Class_List *cl_head)
 
         printf("Lecturer:");
         cpystring("", p->Lecturer, NAME_LINE);
-        fgets(p->Lecturer, NAME_LINE, stdin);
-        fgets_demo(p->Lecturer);
+        scanf("%30s",p->Lecturer);
+        while((c=getchar())!='\n'&&c!=EOF);
 
         printf("Max Seats:");
         scanf("%d", &p->Max_Enrollment);
@@ -179,7 +183,7 @@ void Course_Entry(Class_List *cl_head)
 
         getchar();
         printf("continue?(y/n)");
-        scanf("%c", &out);
+        scanf("%c", &out);getchar();
         if (out == 'n' || out == 'N')
             flag = OFF;
 
@@ -263,7 +267,7 @@ void save_cl_list(Class_List *cl_head)
     FILE *fp = NULL;
     char *cl_file = "class_list.txt";
     Class_List *p = NULL;
-    Class_List *head = cl_head;
+    Class_List *head = cl_head->next;
 
     if ((fp = fopen(cl_file, "wb")) == NULL)
     {
@@ -296,17 +300,9 @@ void read_cl_list(Class_List *cl_head)
         exit(1);
     }
 //清空一下cl，没有清空函数，暂时用cpy来代替一下，后面看看有没有必要写一个。
-	flag = ON;
 	
     while ((fread(&temp_cl, sizeof(Class_List) - sizeof(temp_cl.next), 1, fp)) == 1)
     {	
-    	if(flag){
-    		flag = OFF;
-    		copy_cl(&temp_cl,cl_head);
-    		cl_head->next = NULL;
-    		copy_cl(&cleaner,&temp_cl);
-    		continue;
-		}
     	
         if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
         {
@@ -357,11 +353,11 @@ void Browse_Courses(Class_List *cl_head)
     }
 }
 
-void open_s_c_selection(Class_List *cl_head){
+void open_s_c_selection(void){
 	char out = 0;
 	
 	flag = OFF;
-	if(cl_head->Category==OFF){
+	if(Open_Student_Course==OFF){
 		flag = ON;
 		printf("STATE: CLOSE \n");
 	}else printf("STATE: OPEN \n");
@@ -371,15 +367,14 @@ void open_s_c_selection(Class_List *cl_head){
 	getchar();
 	
 	if(out=='y'||out=='Y'){
-		cl_head->Category = flag;	
+		Open_Student_Course = flag;	
 	}
 	
 	printf("STATE:");
-	if(cl_head->Category==OFF){
+	if(Open_Student_Course==OFF){
 		printf(" CLOSE \n");
 	}else printf(" OPEN \n");
-	
-	save_cl_list(cl_head);
+	save_Open_Student_Course();
 }
 
 void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
@@ -403,7 +398,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 		return;
 	}
 	
-	if(cl_head->Category==OFF){
+	if(Open_Student_Course==OFF){
 		printf("Course selection channel has been closed.\n");
 		printf("Please wait for the administrator to enable it.\n");
 		return;
@@ -462,7 +457,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 	double *secp[2] = {0};  //student_elective_credits_p
 	Class_List *p = NULL;
 	
-	if(cl_head->Category==OFF){
+	if(Open_Student_Course==OFF){
 		printf("Course selection channel has been closed.\n");
 		printf("Please wait for the administrator to enable it.\n");
 		return;

@@ -24,13 +24,15 @@ Major_Code_List mcl_head={
 	0 
 };
 
+Bool Open_Student_Course = OFF; 
+
 int main(int argc, char *argv[])
 {
 	//SetConsoleOutputCP(65001);   //编码统一，之前调试一直有bug
     S_Student_List *p = NULL;
     int i = 0;
     S_Student_List student_temp ={0};
-
+	read_Open_Student_Course();
     Read_SSL(&ssl_head); // 读取
 
     p = Inquiry_User(&ssl_head); // 询问

@@ -2,6 +2,9 @@
 #define __SHOW_HEAD__
 #include "student.h"
 #include "class.h"
+
+void save_Open_Student_Course(void);          //保存 课程开关
+void read_Open_Student_Course(void);         //读取 课程开关
 void show_major_code_menu(void);                              //专业号菜单--管理员
 void fresh_file(char* file);                                  //清空文件
 void show_student_menu(void);                                //学生菜单界面

@@ -13,7 +13,7 @@
 #define SS 1                      // 自然科学
 #define MAX_SCORE 9.0               // 分数分配多
 #define MIN_SCORE 3.0               // 分数分配少
-
+#define OPEN_FILE "open.txt"
 
 typedef enum{ OFF,ON}Bool;    
 /*自定义开关*/
