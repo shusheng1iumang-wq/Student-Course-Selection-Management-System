@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include"show.h"
 #include<errno.h>
+#include<string.h>
 #include"student.h"
 //2025年广工，08工学，12管理学，07理学
 //05文学，13艺术类，03法学，02经济学
@@ -152,6 +153,7 @@ void free_malloc_mcl(Major_Code_List* mcl_head){
 void Entry_Major_Code(Major_Code_List* mcl_head){
 	char out = 0;
 	Major_Code_List* p =NULL;
+	Major_Code_List* same=NULL;
 	int c= 0;
 	
 	do{
@@ -159,9 +161,28 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		p = (Major_Code_List*)malloc(sizeof(Major_Code_List));
 		clean_mcl_item(p);
 		printf("Input the Major:\n");
+		again4:
 		printf("Major Code:");
 		scanf("%8s",p->code);
 		while((c=getchar())!='\n'&&c!=EOF);
+		if(strcmp(p->code,"000000")<0){
+			printf("Your input is illegal.\n");
+			goto again4;
+		}
+		if((same=Search_mcl_item_code(mcl_head,p->code))!=NULL){
+			printf("There have a same one.\n");
+			show_mcl_item(same);
+			printf("Do you want to delete?(y/n)");
+			scanf("%c",&out);
+			while((c=getchar())!='\n'&&c!=EOF);
+			if(out=='y'||out=='Y'){
+				Delete_mcl_item(mcl_head);
+				printf("Let's continue.\n");
+			}else{
+				printf("go back.\n");
+				free(p);
+			}
+		}
 		printf("Major Name:");
 		fgets(p->name,COURSE_NAME_LINE,stdin);
 		fgets_demo(p->name);
@@ -190,8 +211,6 @@ Bool code2category(char* code){
 }
 
 void Insert(Major_Code_List* mcl_head,Major_Code_List *p){
-	int count =  char2number(p->code,CODE_LINE);
-	int temp = 0;
 	char out = 0;
 	Major_Code_List* r= mcl_head->next;
 	Major_Code_List* l= mcl_head;
@@ -199,14 +218,12 @@ void Insert(Major_Code_List* mcl_head,Major_Code_List *p){
 	flag = ON;
 	
 	while(r!=NULL){
-		temp =char2number(r->code,CODE_LINE);
-		if(count<temp){
+		if(strcmp(p->code,r->code)<0){
 			flag = OFF;
 			l->next = p;
 			p->next = r;
 			break;
-		}
-		if(count== temp){
+		}else if(strcmp(p->code,r->code)==0){
 			printf("There has the same major code:\n");
 			show_mcl_item(r);
 			printf("Do you want to replace this one?(y/n)");
@@ -275,12 +292,13 @@ void Save_mcl(Major_Code_List* mcl_head,char* file){
 void Delete_mcl_item(Major_Code_List*mcl_head){
 	char code[CODE_LINE]={0};
 	char out = 0;
+	int c=0;
 	Major_Code_List* p = NULL;
 	Major_Code_List* l = mcl_head;
 	
 	printf("Input the Major Code to delete:");
-	fgets(code,CODE_LINE,stdin);
-	fgets_demo(code);
+	scanf("%24s",code);
+	while((c=getchar())!='\n'&&c!=EOF);
 	
 	if((p=Search_mcl_item_code(mcl_head,code))==NULL){
 		printf("Counld not find the %s\n",code);
@@ -301,13 +319,13 @@ void Delete_mcl_item(Major_Code_List*mcl_head){
 	}
 }
 
+
 Major_Code_List* Search_mcl_item_code(Major_Code_List*mcl_head,char *code){
 	Major_Code_List*p = NULL;
-	Major_Code_List *r = mcl_head;
-	int count = char2number(code,CODE_LINE);
+	Major_Code_List *r = mcl_head->next;
 	
 	while(r!=NULL){
-		if(count==char2number(r->code,CODE_LINE)){
+		if(strcmp(code,r->code)==0){
 			p = r;
 			break;
 		}

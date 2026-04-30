@@ -5,7 +5,7 @@
 #include "student.h"
 #include"major_code.h"
 
-static Major_Code_List mcl_head;
+extern Major_Code_List mcl_head;
 
 void admin_student_menu(S_Student_List *ssl_head)
 {
@@ -52,6 +52,7 @@ void Student_Entry(S_Student_List* ssl_head){
 	char out=0;
 	S_Student_List *p=NULL;
 	Major_Code_List *mcl_p=NULL;
+	int c=0;
 	
 	do{
 		flag =OFF;
@@ -84,15 +85,21 @@ void Student_Entry(S_Student_List* ssl_head){
 		clean_ssl_item(p);
 		p->ID = id;
 		cpystring("123456789&&Gdut",p->key,15);
-		printf("Major Code:");
-		fgets(p->major_code,CODE_LINE,stdin);
-		fgets_demo(p->major_code);
-		clean_the_history(p);
+		
 		
 		Read_major_code_list(&mcl_head,MCL_FILE);
+
+		again3:
+		printf("Major Code:");
+		scanf("%24s",p->major_code);
+		while((c=getchar())!='\n'&&c!=EOF);
 		mcl_p = Search_mcl_item_code(&mcl_head,p->major_code);
+		
 		if(mcl_p==NULL){
 			printf("Could find this major_code.\n");
+			printf("Do you want to inout again?(y/n)");
+			scanf("%c",&out);getchar();
+			if(out=='y'||out=='Y')goto again3;
 			free(p);
 			free_malloc_mcl(&mcl_head);
 			printf("go back.\n");
@@ -103,8 +110,8 @@ void Student_Entry(S_Student_List* ssl_head){
 		free_malloc_mcl(&mcl_head);
 		
 		printf("Name:");
-		fgets(p->name,NAME_LINE,stdin);
-		fgets_demo(p->name);
+		scanf("%30s",p->name);
+		while((c=getchar())!='\n'&&c!=EOF);
 		
 		Insert_account(ssl_head,p);
 		
