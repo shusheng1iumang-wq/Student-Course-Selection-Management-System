@@ -563,5 +563,5 @@ void course_completion(Class_List*cl_head){
 	printf("finshed.\n");
 	Save_SSL(&ssl_head);
 	free_malloc_ssl_list(&ssl_head);
-	free(ecs_Array);
+	if(ecs_Array!=NULL)free(ecs_Array);
 }

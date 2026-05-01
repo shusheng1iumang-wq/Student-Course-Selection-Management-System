@@ -137,7 +137,6 @@ void copy_ssl(S_Student_List *paste, S_Student_List *wall)
             wall->elective_record[i][j][1] = paste->elective_record[i][j][1];
         }
     }
-    wall->next = paste->next;
 }
 
 void clean_ssl_item(S_Student_List *wall)
