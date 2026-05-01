@@ -38,7 +38,7 @@ typedef struct STUDENT_LIST
     // HSS-->Humanities and Social Sciences
     // SS-->Science and Technology
     // 0 for max , 1 for now
-    int elective_record[2][10][2]; // 0 for HSS, 1 for SS   
+    double elective_record[2][10][2]; // 0 for HSS, 1 for SS   
 	// 10个空间够用，后面想想怎么优化
 	//后面加入的功能，成绩功能。   0表示课程号  1表示成绩，成绩大于0就是结课     
     // record course selection history

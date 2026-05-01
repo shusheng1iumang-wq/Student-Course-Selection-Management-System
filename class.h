@@ -2,6 +2,7 @@
 #ifndef __CLASS_HEAD__
 #define __CLASS_HEAD__
 
+extern S_Student_List ssl_head;
 
 typedef struct CLASS_LIST
 {
@@ -15,6 +16,12 @@ typedef struct CLASS_LIST
     struct CLASS_LIST *next;
 } Class_List;
 
+typedef struct END_COURSE_STUDENT_ARRAY{
+	lli ID;
+	double *score;
+}End_Course_Student_Array;
+
+void course_completion(Class_List*cl_head);                  //结课和成绩录入
 void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head);   //取消课程--学生
 void Course_registration(S_Student_List *student_temp,Class_List *cl_head);   //课程报名--学生
 void open_s_c_selection(void);    //选课开关！

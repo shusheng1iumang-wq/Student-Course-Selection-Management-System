@@ -185,9 +185,8 @@ void Insert_account(S_Student_List* ssl_head,S_Student_List *p){
 
 void free_malloc_ssl_list(S_Student_List* ssl_head){
 	S_Student_List* r=ssl_head->next;
-	
+	S_Student_List* temp =NULL;
 	while(r){
-		S_Student_List* temp = r;
 		r=r->next;
 		free(temp);
 	}
@@ -285,13 +284,13 @@ void show_ssl_item(S_Student_List *p){
 	printf("HSS record:\n");
 	for(i=0;i<10;i++){
 		if(p->elective_record[0][i][0]!=0){
-			printf("Course Number:%d\n",p->elective_record[0][i][0]);
+			printf("Course Number:%d\n",(int)(p->elective_record[0][i][0]));
 		}else break;
 	}
 	printf("SS record:\n");
 	for(i=0;i<10;i++){
 		if(p->elective_record[1][i][0]!=0){
-			printf("Course Number:%d\n",p->elective_record[1][i][0]);
+			printf("Course Number:%d\n",(int)(p->elective_record[1][i][0]));
 		}else break;
 	}
 }	
@@ -317,9 +316,9 @@ void view_course_grades(S_Student_List *p){
 	printf("HSS course record:\n");
 	for(i=0;i<10;i++){
 		if(p->elective_record[HSS][i][0]!=0){
-			printf("course_num:%d",p->elective_record[HSS][i][0]);
+			printf("course_num:%d",(int)(p->elective_record[HSS][i][0]));
 			if(p->elective_record[HSS][i][1]!=0){
-				printf("--%d\n",p->elective_record[HSS][i][1]);
+				printf("--%.2lf\n",p->elective_record[HSS][i][1]);
 			}else{
 				printf("--The course has not been completed.\n");
 			}
@@ -332,9 +331,9 @@ void view_course_grades(S_Student_List *p){
 	printf("SS course record:\n");
 	for(i=0;i<10;i++){
 		if(p->elective_record[SS][i][0]!=0){
-			printf("course_num:%d",p->elective_record[SS][i][0]);
+			printf("course_num:%d",(int)(p->elective_record[SS][i][0]));
 			if(p->elective_record[SS][i][1]!=0){
-				printf("--%d\n",p->elective_record[SS][i][1]);
+				printf("--%.2lf\n",p->elective_record[SS][i][1]);
 			}else{
 				printf("--The course has not been completed.\n");
 			}

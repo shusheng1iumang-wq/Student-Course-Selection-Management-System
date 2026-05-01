@@ -112,7 +112,6 @@ void Student_Entry(S_Student_List* ssl_head){
 		}
 		cpystring(mcl_p->name,p->major_name,COURSE_NAME_LINE);
 		give_elective_credits(mcl_p->Category,p); 
-		free_malloc_mcl(&mcl_head);
 		
 		printf("Name:");
 		while(!safe_fgets(p->name,NAME_LINE)){
@@ -148,14 +147,14 @@ void Browse_Student(S_Student_List* ssl_head){
 		printf("HSS record:");
 		for(i=0;i<10;i++){
 			if(p->elective_record[HSS][i][0]!=0){
-				printf("(%d):%d",i,p->elective_record);
+				printf("(%d):%d",i,(int)(p->elective_record[HSS][i][0]));
 				printf(" ");
 			}else printf("\n");break;
 		}
 		printf("SS record:");
 		for(i=0;i<10;i++){
 			if(p->elective_record[SS][i][0]!=0){
-				printf("(%d):%d",i,p->elective_record);
+				printf("(%d):%d",i,(int)(p->elective_record[SS][i][0]));
 				printf(" ");
 			}else printf("\n");break;
 		}
@@ -173,7 +172,7 @@ void Delete_Student_item(S_Student_List* ssl_head){
 	do{
 		flag =OFF;
 
-		SAFE_READ(lld,"Input id to delete",id);
+		SAFE_READ(lld,"Input id to delete:",id);
 
 		p = Search_Student_ID(ssl_head,id);
 		

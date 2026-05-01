@@ -120,7 +120,6 @@ void copy_ssl(S_Student_List *paste, S_Student_List *wall)
 {
     int i = 0;
     int j = 0;
-    clean_ssl_item(wall);  //怀疑用不用
 
     wall->ID = paste->ID;
     cpystring(paste->name, wall->name, NAME_LINE);
@@ -138,6 +137,7 @@ void copy_ssl(S_Student_List *paste, S_Student_List *wall)
             wall->elective_record[i][j][1] = paste->elective_record[i][j][1];
         }
     }
+    wall->next = paste->next;
 }
 
 void clean_ssl_item(S_Student_List *wall)
