@@ -53,6 +53,7 @@ void Student_Entry(S_Student_List* ssl_head){
 	S_Student_List *p=NULL;
 	Major_Code_List *mcl_p=NULL;
 	int c=0;
+	Bool flag = OFF;
 	
 	Read_major_code_list(&mcl_head,MCL_FILE);
 	
@@ -167,6 +168,7 @@ void Delete_Student_item(S_Student_List* ssl_head){
 	char out = 0;
 	int c=0;
 	S_Student_List *p = NULL;
+	Bool flag = OFF;
 	
 	do{
 		flag =OFF;

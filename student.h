@@ -17,7 +17,9 @@
 
 typedef enum{ OFF,ON}Bool;    
 /*自定义开关*/
-Bool flag; // 全局开关
+Bool extern_flag; // 全局开关
+//取消全局开关的设置，实际函数嵌套完全局调度会很复杂，不如局部定义。
+//其实给宏就可以了  标明他的全局性质，防止用错
 
 
 // long long int

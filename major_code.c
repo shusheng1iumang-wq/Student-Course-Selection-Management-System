@@ -65,7 +65,7 @@ void Read_major_code_list(Major_Code_List * mcl_head,char * file){
 	Major_Code_List mcl_temp={0};
 	Major_Code_List *p=NULL,*head=mcl_head;
 	
-	flag = ON;
+	Bool flag = ON;
 	//我将加入更加安全的文件保护，这是第一次尝试，如果可以，前面的我都会找机会修改。
 	//怀疑bug在这里
 	again:
@@ -156,6 +156,8 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 	Major_Code_List* same=NULL;
 	int c= 0;
 	
+	Bool flag = OFF;
+	
 	do{
 	
 		p = (Major_Code_List*)malloc(sizeof(Major_Code_List));
@@ -233,7 +235,7 @@ void Insert(Major_Code_List* mcl_head,Major_Code_List *p){
 	Major_Code_List* r= mcl_head->next;
 	Major_Code_List* l= mcl_head;
 	Major_Code_List* next =NULL;
-	flag = ON;
+	Bool flag = ON;
 	
 	while(r!=NULL){
 		if(strcmp(p->code,r->code)<0){

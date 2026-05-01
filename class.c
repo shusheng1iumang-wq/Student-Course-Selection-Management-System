@@ -13,7 +13,8 @@ void admin_class_menu(Class_List *cl_head)
     Class_List *temp = NULL;
     FILE* fp=NULL;
     char* cl_file="class_list.txt";
-
+	Bool flag = OFF;
+	
     do
     {
         show_admin_class_menu();
@@ -29,6 +30,7 @@ void admin_class_menu(Class_List *cl_head)
             Browse_Courses(cl_head);
             break;
         case 2:
+        	flag = OFF;
 			do
             {
             	SAFE_READ(d,"Input the Course Number to delete:",i);
@@ -100,12 +102,11 @@ void Course_Entry(Class_List *cl_head)
     char *cl_file = "class_list.txt";
     char c=0;
 	
-	
-	//这里以为flag复用产生bug了，重新定义，同时我要开始修复程序中的flag了。
-    flag = ON;
+	Bool flag = ON;
 
     do
-    {
+    {	
+    	flag = ON;
         if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
         {
             printf("malloc error!");
@@ -211,6 +212,7 @@ void free_malloc_cl_list(Class_List *cl_head)
 Class_List *check_course_number(Class_List *cl_head, int number)
 {
     Class_List *p = NULL;
+    cl_head = cl_head->next;
     while (cl_head != NULL)
     {
         if (cl_head->Course_Number == number)
@@ -227,7 +229,7 @@ void delete_cl_item(Class_List *cl_head, int number)
 {
     Class_List *l = cl_head;
     Class_List *r = cl_head->next;
-    flag = OFF;
+    Bool flag = OFF;
     while (r != NULL)
     {
         if (r->Course_Number == number)
@@ -346,7 +348,7 @@ void Browse_Courses(Class_List *cl_head)
 void open_s_c_selection(void){
 	char out = 0;
 	
-	flag = OFF;
+	Bool flag = OFF;
 	if(Open_Student_Course==OFF){
 		flag = ON;
 		printf("STATE: CLOSE \n");

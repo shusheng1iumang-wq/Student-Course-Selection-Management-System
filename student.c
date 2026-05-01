@@ -19,6 +19,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     char key[KEY_LINE]={0};
     char out=0;
     int i,c=0;
+    Bool flag = OFF;
     //check
     do{
     	SAFE_READ(lld,"Student ID:",s_id);
@@ -81,6 +82,7 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	char out=0;
 	int i=0,c=0;
 	char major_code[CODE_LINE]={0}; 
+	Bool flag = OFF;
 	
 	if((p = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
 		printf("malloc error!\n");

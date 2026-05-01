@@ -7,7 +7,7 @@
 //prompt提示词  
 #define SAFE_READ(type,prompt,var)\
 	do{\
-		flag = OFF; \
+		extern_flag = OFF; \
 		char _buffer[BUFFER_LINE];\
 		char _check_point = 0;\
 		\
@@ -19,9 +19,9 @@
 		if((sscanf(_buffer,"%"#type" %c",&(var),&_check_point))!=1){\
 			printf("input error!\n");\
 			printf("again.\n");\
-			flag = ON; \
+			extern_flag = ON; \
 		}\
-	}while(flag);
+	}while(extern_flag);
 //宏能优化性能    用到了#运算 
  
 //Bool safe_read_int(int*n)                                 //安全输入int
