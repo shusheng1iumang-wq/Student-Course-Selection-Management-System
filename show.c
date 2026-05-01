@@ -241,7 +241,6 @@ Bool safe_fgets(char*string,int size){
 	return ON;
 }
 
-
 //		已经被我变成宏了   坠机了man!
 //Bool safe_read_int(int*n){
 //	char buffer[BUFFER_LINE];
@@ -256,3 +255,10 @@ Bool safe_fgets(char*string,int size){
 //	
 //	return OFF;
 //}
+
+void buffer_line(void){
+	char line[CODE_LINE];
+	do{
+		printf("Press Enter to continue.\n");
+	}while(!safe_fgets(line,CODE_LINE));
+}

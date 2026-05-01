@@ -14,7 +14,8 @@
 #define MAX_SCORE 9.0               // 分数分配多
 #define MIN_SCORE 3.0               // 分数分配少
 #define OPEN_FILE "open.txt"
-
+#define VER_CODE_LINE  10            
+#define USE_VER_CODE 6
 typedef enum{ OFF,ON}Bool;    
 /*自定义开关*/
 Bool extern_flag; // 全局开关
@@ -45,7 +46,6 @@ typedef struct STUDENT_LIST
     struct STUDENT_LIST *next;
 } S_Student_List;
 
-
 void view_course_grades(S_Student_List *p);       //展示学生个人成绩
 void del_ssl_item(S_Student_List *ssl_head,lli id);   //删除学生元素
 void show_ssl_item(S_Student_List *p);    //展示学生元素
@@ -54,7 +54,6 @@ void give_elective_credits(Bool,S_Student_List*p); // 根据专业代号分配�
 void cpystring(char *paste, char *wall, int size); // 自定义复制字符串函数  
 //也有清空string的作用，好好利用。
 void fgets_demo(char *string); // fgets补丁，去掉'\n'
-Bool key2key(char *key, char *key_input); // 字符串对比，用来比对密码
 Bool password_security(char *key); // 确定密码限制
 void Insert_account(S_Student_List *ssl_head, S_Student_List *p); // 根据学号插入用户
 S_Student_List *Set_Up_Student_Account(S_Student_List *ssl_head, lli s_id); // 建立学生用户

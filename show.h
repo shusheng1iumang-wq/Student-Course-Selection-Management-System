@@ -23,7 +23,9 @@
 		}\
 	}while(extern_flag);
 //宏能优化性能    用到了#运算 
- 
+
+
+void buffer_line(void);                                 //让信息别滚太快   用户体验优化 
 //Bool safe_read_int(int*n)                                 //安全输入int
 //我真被缓冲区搞崩溃了，逼我开大是吧！！！
 Bool safe_fgets(char*string,int size);                 //安全的输入函数

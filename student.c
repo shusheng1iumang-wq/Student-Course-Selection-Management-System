@@ -10,25 +10,24 @@
 并且设置初始密码，但是吧，要花很长时间，而且要都是重复的工作，
 所以我选择在空链表上慢慢添加每一个注册的学生。
 */
-static Major_Code_List mcl_head;
+extern Major_Code_List mcl_head;            //全局变量major_code——list
 // function of inquiry for new users
-S_Student_List *Inquiry_User(S_Student_List *ssl_head)
+S_Student_List *Inquiry_User(S_Student_List *ssl_head)        //问询入口
 {	
-	S_Student_List *p=NULL;
-    lli s_id = 0;
-    char key[KEY_LINE]={0};
-    char out=0;
-    int i,c=0;
-    Bool flag = OFF;
+	S_Student_List *p=NULL;                   // ssl指针
+    lli s_id = 0;                                //读入id
+    char key[KEY_LINE]={0};                     //密码变量
+    char out=0;                            //判断变量
+    int i;                             //i是操作数    
+    Bool flag = OFF;                      //开关接口
     //check
     do{
     	SAFE_READ(lld,"Student ID:",s_id);
-	}while(s_id<STUDENT_ID_LINE);
-	
-	if(s_id==STUDENT_ID_LINE)p=ssl_head;
-	else p = Search_Student_ID(ssl_head,s_id);
+	}while(s_id<STUDENT_ID_LINE);               //读入id
+	            
+	p = Search_Student_ID(ssl_head,s_id);        //在库中寻找对象   
     
-    if(p!=NULL){
+    if(p!=NULL){              //在库中对象的密码判断     
     	i=0;
     	do{	
     		flag=OFF;
@@ -37,9 +36,9 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     			printf("fgets error!\n");
     			printf("Pass Word:");
 			}
-			flag=key2key(p->key,key);
 			i++;
-			if(!flag){
+			if(!strcmp(key,p->key))flag=ON;
+			else{
 				if(i>=TIP_TIME){
 					printf("Your have %d times to try!\n",THE_TRY_LINE-i);
 					SAFE_READ(c,"Do you want to exit?(y/n)",out);
@@ -51,7 +50,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 				}
 			}
     	}while(!flag);
-    	
+						//end    	
 	}else{
 		printf("I can't find your information.\n");
 		SAFE_READ(c,"Do you want to create your account?(y/n)",out);
@@ -65,20 +64,16 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 };
 
 S_Student_List *Search_Student_ID(S_Student_List* ssl_head,lli s_id){
-	S_Student_List *p=NULL;
-	S_Student_List *temp=ssl_head;
-	while(temp!=NULL&&temp->ID!=s_id){
-		temp=temp->next;
+	while(ssl_head!=NULL&&ssl_head->ID!=s_id){
+		ssl_head=ssl_head->next;
 	}
-	if(temp!=NULL)p=temp;
-	return p;
+	return ssl_head;
 }
 
 S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	S_Student_List *p=NULL;
 	Major_Code_List *mcl_p=NULL;
 	char key1[KEY_LINE]={0};
-	char key2[KEY_LINE]={0};
 	char out=0;
 	int i=0,c=0;
 	char major_code[CODE_LINE]={0}; 
@@ -86,11 +81,10 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	
 	if((p = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
 		printf("malloc error!\n");
-		exit(0);
+		exit(1);
 	};
 	p->ID = s_id;
 	again:
-	flag=OFF;
 	do{	
 		printf("Your password needs to be at least 12 characters long\n");
 		printf("and contain uppercase and lowercase letters\n");
@@ -105,23 +99,23 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	
 	cpystring(key1,p->key,KEY_LINE);
 	i = 0;
-	flag = OFF;
 	do{
-		printf("Confirm Password:");
 		if(i>=TIP_TIME){
 			SAFE_READ(c,"We can go back to set up password,do we?(Y/N)",out);
 			if(out=='y'||out=='Y')goto again;
 		}
-		while(!safe_fgets(key2,KEY_LINE)){
+		printf("Confirm Password:");
+		while(!safe_fgets(key1,KEY_LINE)){
 			printf("fgets error!\n");
-			printf("input again:");
+			printf("Confirm Password:");
 		}
-		flag = key2key(key2,p->key);
+		if(!strcmp(key1,p->key))flag=ON;
 		i++;
 	}while(!flag);
 	
 	printf("Congratulation!\n");
-
+	buffer_line();
+	
 	Read_major_code_list(&mcl_head,MCL_FILE);	
 	
 	do{
@@ -197,22 +191,6 @@ void fgets_demo(char* string){
 	int length=strlen(string)-1;
 	
 	if(string[length]=='\n')string[length]=0;
-}
-
-Bool key2key(char *key,char *key_input){
-	Bool flag=ON;
-	int i;
-	
-	if(strlen(key)==strlen(key_input)){
-		for(i=0;i<strlen(key);i++){
-			if(key[i]!=key_input[i]){
-				flag=OFF;
-				break;
-			}
-		}
-	}else flag=OFF;
-	
-	return flag;
 }
 
 Bool password_security(char* key){

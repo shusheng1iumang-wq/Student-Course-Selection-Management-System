@@ -119,7 +119,6 @@ void Student_Entry(S_Student_List* ssl_head){
 			printf("input again:");
 		}
 		
-		
 		Insert_account(ssl_head,p);
 		
 		SAFE_READ(c,"continue?(y/n)",out);
