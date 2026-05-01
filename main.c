@@ -46,8 +46,7 @@ int main(int argc, char *argv[])
         do
         {
             show_admin_menu();
-            scanf("%d", &i);
-            while((c=getchar())!='\n'&&c!=EOF);
+            SAFE_READ(d,"Your choose:",i);
             switch (i)
             {
             case 0:
@@ -76,8 +75,7 @@ int main(int argc, char *argv[])
         printf("Welcome,User:%s\n", student_temp.name);
         do{
         	show_student_menu();
-        	scanf("%d",&i);
-        	while((c=getchar())!='\n'&&c!=EOF);
+        	SAFE_READ(d,"Your choose:",i);
         	switch(i){
         		case 0:
         			read_cl_list(&cl_head);

@@ -22,8 +22,7 @@ void admin_major_menu(Major_Code_List* mcl_head){
 	
 	do{
 		show_major_code_menu();
-		scanf("%d",&i);
-		while((c=getchar())!='\n'&&c!=EOF);
+		SAFE_READ(d,"Your choose:",i);
 		Read_major_code_list(mcl_head,mcl_file);
 		switch(i){
 			case 0:
@@ -166,7 +165,7 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		do{
 			flag = OFF;
 			printf("Major Code:");
-			while(!save_fgets(p->code,CODE_LINE)){
+			while(!safe_fgets(p->code,CODE_LINE)){
 				printf("fgets error!\n");
 				printf("Major Code:");
 			}
@@ -190,9 +189,7 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		if((same=Search_mcl_item_code(mcl_head,p->code))!=NULL){
 			printf("There have a same one.\n");
 			show_mcl_item(same);
-			printf("Do you want to delete?(y/n)");
-			scanf("%c",&out);
-			while((c=getchar())!='\n'&&c!=EOF);
+			SAFE_READ(c,"Do you want to delete?(y/n)",out);
 			if(out=='y'||out=='Y'){
 				Delete_mcl_item(mcl_head);
 				printf("Let's continue.\n");
@@ -203,7 +200,7 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		}
 		
 		printf("Major Name:");
-		while(!save_fgets(p->name,COURSE_NAME_LINE)){
+		while(!safe_fgets(p->name,COURSE_NAME_LINE)){
 			printf("fgets error!\n");
 			printf("Major Name:");
 		}
@@ -212,8 +209,7 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		
 		Insert(mcl_head,p);
 		
-		printf("continue?(y/n)");
-		out = getchar();getchar();
+		SAFE_READ(c,"continue?(y/n)",out);
 		if(out=='n'||out=='N'){
 			break;
 		}
@@ -248,8 +244,7 @@ void Insert(Major_Code_List* mcl_head,Major_Code_List *p){
 		}else if(strcmp(p->code,r->code)==0){
 			printf("There has the same major code:\n");
 			show_mcl_item(r);
-			printf("Do you want to replace this one?(y/n)");
-			out = getchar();getchar();
+			SAFE_READ(c,"Do you want to replace this one?(y/n)",out);
 			if(out=='y'||out=='Y'){
 				next = r->next;
 				cpy_mcl_item(p,r);
@@ -319,7 +314,7 @@ void Delete_mcl_item(Major_Code_List*mcl_head){
 	Major_Code_List* l = mcl_head;
 	
 	printf("Input the Major Code to delete:");
-	while(!save_fgets(code,CODE_LINE)){
+	while(!safe_fgets(code,CODE_LINE)){
 		printf("fgets error!\n");
 		printf("Input the Major Code to delete:");
 	}
@@ -331,8 +326,7 @@ void Delete_mcl_item(Major_Code_List*mcl_head){
 	}
 	printf("We find:\n");
 	show_mcl_item(p);
-	printf("Are you sure?(y/n)");
-	out = getchar();getchar();
+	SAFE_READ(c,"Are you sure?(y/n)",out);
 	while(l!=NULL){
 		if(l->next==p)break;
 		l = l->next;

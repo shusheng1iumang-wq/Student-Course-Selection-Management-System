@@ -21,9 +21,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     int i,c=0;
     //check
     do{
-    printf("Student ID:\n");
-    scanf("%lld",&s_id);
-    while((c=getchar())!='\n'&&c!=EOF);
+    	SAFE_READ(lld,"Student ID:",s_id);
 	}while(s_id<STUDENT_ID_LINE);
 	
 	if(s_id==STUDENT_ID_LINE)p=ssl_head;
@@ -33,8 +31,8 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     	i=0;
     	do{	
     		flag=OFF;
-    		printf("Pass Word:\n");
-    		while(!save_fgets(key,KEY_LINE)){
+    		printf("Pass Word:");
+    		while(!safe_fgets(key,KEY_LINE)){
     			printf("fgets error!\n");
     			printf("Pass Word:");
 			}
@@ -43,9 +41,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 			if(!flag){
 				if(i>=TIP_TIME){
 					printf("Your have %d times to try!\n",THE_TRY_LINE-i);
-					printf("Do you want to exit?(y/n)");
-					scanf("%c",&out);
-					while((c=getchar())!='\n'&&c!=EOF);
+					SAFE_READ(c,"Do you want to exit?(y/n)",out);
 					if(out=='y'||out=='Y')exit(0);
 				}
 				if(i==THE_TRY_LINE){
@@ -57,9 +53,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     	
 	}else{
 		printf("I can't find your information.\n");
-		printf("Do you want to create your account?(y/n)");
-		scanf("%c",&out);
-		while((c=getchar())!='\n'&&c!=EOF);
+		SAFE_READ(c,"Do you want to create your account?(y/n)",out);
 		if(out=='n'||out=='N'){
 			printf("See you.");
 			exit(0);
@@ -96,13 +90,13 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	again:
 	flag=OFF;
 	do{	
-		printf("Your Password:\n");
 		printf("Your password needs to be at least 12 characters long\n");
 		printf("and contain uppercase and lowercase letters\n");
 		printf("as well as other characters like\"#\"\n");
-		while(!save_fgets(key1,KEY_LINE)){
+		printf("Your Password:");
+		while(!safe_fgets(key1,KEY_LINE)){
 			printf("fgets_error!\n");
-			printf("input again:");
+			printf("Your Password:");
 		}
 		flag = password_security(key1);
 	}while(!flag);
@@ -113,12 +107,10 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	do{
 		printf("Confirm Password:");
 		if(i>=TIP_TIME){
-			printf("We can go back to set up password,do we?(Y/N)");
-			scanf("%c",&out);
-			while((c=getchar())!='\n'&&c!=EOF);
+			SAFE_READ(c,"We can go back to set up password,do we?(Y/N)",out);
 			if(out=='y'||out=='Y')goto again;
 		}
-		while(!save_fgets(key2,KEY_LINE)){
+		while(!safe_fgets(key2,KEY_LINE)){
 			printf("fgets error!\n");
 			printf("input again:");
 		}
@@ -132,7 +124,7 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	
 	do{
 		printf("Your major code:");
-		while(!save_fgets(major_code,CODE_LINE)){
+		while(!safe_fgets(major_code,CODE_LINE)){
 			printf("fgets error!");
 			printf("\nYour major code:");
 		}
@@ -162,7 +154,7 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	
 	cpystring("",p->name,NAME_LINE);
 	printf("Your name:");
-	while(!save_fgets(p->name,NAME_LINE)){
+	while(!safe_fgets(p->name,NAME_LINE)){
 		printf("fgets error!\n");
 		printf("Your name:");
 	}

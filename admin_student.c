@@ -16,8 +16,7 @@ void admin_student_menu(S_Student_List *ssl_head)
     do
     {
         show_admin_student_menu();
-        scanf("%d", &i);
-        while((c=getchar())!='\n'&&c!=EOF);
+    	SAFE_READ(d,"Your choose:",i);
         Read_SSL(ssl_head);
         switch (i)
         {
@@ -61,26 +60,23 @@ void Student_Entry(S_Student_List* ssl_head){
 		flag =OFF;
 		do{
 			again:
-			printf("The Student ID:");
-			scanf("%lld",&id);
-			while((c=getchar())!='\n'&&c!=EOF);
+			SAFE_READ(lld,"The Student ID:",id);
 		}while(id<=STUDENT_ID_LINE);
 		
 		p = Search_Student_ID(ssl_head,id);
 		if(p!=NULL){
 			printf("There had a same one:\n");
 			show_ssl_item(p);
-			printf("Do you want to delete this?(y/n)");
-			scanf("%c",&out);
-			while((c=getchar())!='\n'&&c!=EOF);
+			
+			SAFE_READ(c,"Do you want to delete this?(y/n)",out);
 			
 			if(out=='y'||out=='Y'){
 				del_ssl_item(ssl_head,id);
 				printf("finshed!let's continue.\n");
 			}else{
-				printf("continue?(y/n)");
-				scanf("%c",&out);
-				while((c=getchar())!='\n'&&c!=EOF);
+				
+				SAFE_READ(c,"continue?(y/n)",out);
+				
 				if(out=='y'||out=='Y'){
 					goto again;
 				}else{
@@ -95,7 +91,7 @@ void Student_Entry(S_Student_List* ssl_head){
 		
 		again3:
 		printf("Major Code:");
-		while(!save_fgets(p->major_code,CODE_LINE)){
+		while(!safe_fgets(p->major_code,CODE_LINE)){
 			printf("fgets error!\n");
 			printf("input again:");
 		}
@@ -104,9 +100,9 @@ void Student_Entry(S_Student_List* ssl_head){
 		
 		if(mcl_p==NULL){
 			printf("Could find this major_code.\n");
-			printf("Do you want to inout again?(y/n)");
-			scanf("%c",&out);
-			while((c=getchar())!='\n'&&c!=EOF);
+			
+			SAFE_READ(c,"Do you want to inout again?(y/n)",out);
+			
 			if(out=='y'||out=='Y')goto again3;
 			free(p);
 			free_malloc_mcl(&mcl_head);
@@ -118,7 +114,7 @@ void Student_Entry(S_Student_List* ssl_head){
 		free_malloc_mcl(&mcl_head);
 		
 		printf("Name:");
-		while(!save_fgets(p->name,NAME_LINE)){
+		while(!safe_fgets(p->name,NAME_LINE)){
 			printf("fgets error!\n");
 			printf("input again:");
 		}
@@ -126,9 +122,7 @@ void Student_Entry(S_Student_List* ssl_head){
 		
 		Insert_account(ssl_head,p);
 		
-		
-		printf("continue?(y/n)");
-		out = getchar();
+		SAFE_READ(c,"continue?(y/n)",out);
 		if(out=='Y'||out=='y')flag=ON;
 		
 		
@@ -176,9 +170,9 @@ void Delete_Student_item(S_Student_List* ssl_head){
 	
 	do{
 		flag =OFF;
-		printf("Input student id to delete:");
-		scanf("%lld",&id);
-		while((c=getchar())!='\n'&&c!=EOF);
+
+		SAFE_READ(lld,"Input id to delete",id);
+
 		p = Search_Student_ID(ssl_head,id);
 		
 		if(p==NULL){
@@ -186,17 +180,14 @@ void Delete_Student_item(S_Student_List* ssl_head){
 		}else{
 			printf("We find:\n");
 			show_ssl_item(p);
-			printf("Do you want to delete?(y/n)");
-			out = getchar();
+			SAFE_READ(c,"Do you want to delete?(y/n)",out);
 			if(out=='y'||out=='Y'){
 				del_ssl_item(ssl_head,id);
 				printf("finshed.\n"); 
 			}
 		}
 		
-		printf("continue?(y/n)");
-		getchar();
-		out=getchar();
+		SAFE_READ(c,"continue?(y/n)",out);
 		if(out=='Y'||out=='y')flag=ON;	
 		
 	}while(flag);

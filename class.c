@@ -17,8 +17,7 @@ void admin_class_menu(Class_List *cl_head)
     do
     {
         show_admin_class_menu();
-        scanf("%d", &i);
-        while((c=getchar())!='\n'&&c!=EOF);
+        SAFE_READ(d,"Your choose:",i);
         read_cl_list(cl_head);
         read_Open_Student_Course();
         switch (i)
@@ -32,9 +31,7 @@ void admin_class_menu(Class_List *cl_head)
         case 2:
 			do
             {
-                printf("Input the Course Number to delete:");
-                scanf("%d", &i);
-                while((c=getchar())!='\n'&&c!=EOF);
+            	SAFE_READ(d,"Input the Course Number to delete:",i);
                 temp = check_course_number(cl_head, i);
 
                 if (temp != NULL)
@@ -42,9 +39,7 @@ void admin_class_menu(Class_List *cl_head)
 
                     printf("We found this one:\n");
                     show_cl_item(temp);
-                    printf("Ready to delete?(y/n)");
-                    scanf("%c", &out);
-                    while((c=getchar())!='\n'&&c!=EOF);
+                    SAFE_READ(c,"Ready to delete?(y/n)",out);
 
                     if (out == 'y' || out == 'Y')
                     {
@@ -64,9 +59,7 @@ void admin_class_menu(Class_List *cl_head)
                 save_cl_list(cl_head);
 
                 flag = OFF;
-                printf("continue?(y/n)");
-                scanf("%c", &out);
-                while((c=getchar())!='\n'&&c!=EOF);
+                SAFE_READ(c,"continue?(y/n)",out);
                 if (out == 'y' || out == 'Y')
                     flag = ON;
             } while (flag);
@@ -106,7 +99,9 @@ void Course_Entry(Class_List *cl_head)
     FILE *fp = NULL;
     char *cl_file = "class_list.txt";
     char c=0;
-
+	
+	
+	//这里以为flag复用产生bug了，重新定义，同时我要开始修复程序中的flag了。
     flag = ON;
 
     do
@@ -118,9 +113,7 @@ void Course_Entry(Class_List *cl_head)
         }
 
     re_entry:
-        printf("Course Number:");
-        scanf("%d", &p->Course_Number);
-        while((c=getchar())!='\n'&&c!=EOF);
+    	SAFE_READ(d,"Course Number:",p->Course_Number);
         temp = check_course_number(cl_head, p->Course_Number);
         if (temp != NULL)
         {
@@ -132,9 +125,7 @@ void Course_Entry(Class_List *cl_head)
                 printf("0->delete\n");
                 printf("1->re-entry\n");
                 printf("2->exit\n");
-                printf("Your choose:");
-                scanf("%d", &i);
-                while((c=getchar())!='\n'&&c!=EOF);
+                SAFE_READ(d,"Your choose:",i);
             } while (i != 0 && i != 1 && i != 2);
             if (i == 0)
             {
@@ -153,42 +144,34 @@ void Course_Entry(Class_List *cl_head)
         }
 
         printf("Course Name:");
-        while(!save_fgets(p->Course_Name,COURSE_NAME_LINE)){
+        while(!safe_fgets(p->Course_Name,COURSE_NAME_LINE)){
         	printf("fgets error!\n");
         	printf("Course Name:");
 		}
-
-        printf("Credits:");
-        scanf("%lf", &p->Credits);
-        while((c=getchar())!='\n'&&c!=EOF);
+		
+		SAFE_READ(lf,"Credits:",p->Credits);
 
         printf("Lecturer:");
-        while(!save_fgets(p->Lecturer,NAME_LINE)){
+        while(!safe_fgets(p->Lecturer,NAME_LINE)){
         	printf("fgets error!\n");
         	printf("Lecturer:");
 		}
 
-        printf("Max Seats:");
-        scanf("%d", &p->Max_Enrollment);
-		while((c=getchar())!='\n'&&c!=EOF);
+		SAFE_READ(d,"Max Seats:",p->Max_Enrollment);
         p->Current_Students = 0;
 
         printf("Category:\n");
         printf("0->HSS,1->SS\n");
         do
         {
-            scanf("%d", &i);
-            while((c=getchar())!='\n'&&c!=EOF);
+        	SAFE_READ(d,"",i);
         } while (i != 0 && i != 1);
         p->Category = i;
         p->next = NULL;
 
         Insert_class(p, cl_head);
-
-        getchar();
-        printf("continue?(y/n)");
-        scanf("%c", &out);
-        while((c=getchar())!='\n'&&c!=EOF);
+		
+		SAFE_READ(c,"continue?(y/n)",out);
         if (out == 'n' || out == 'N')
             flag = OFF;
 
@@ -369,9 +352,7 @@ void open_s_c_selection(void){
 		printf("STATE: CLOSE \n");
 	}else printf("STATE: OPEN \n");
 	
-	printf("Do you want to change?(y/n)");
-	out = getchar();
-	getchar();
+	SAFE_READ(c,"Do you want to change?(y/n)",out);
 	
 	if(out=='y'||out=='Y'){
 		Open_Student_Course = flag;	
@@ -410,9 +391,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 		printf("Please wait for the administrator to enable it.\n");
 		return;
 	}
-	printf("Input the course number you want enter:");
-	scanf("%d",&number);
-	while((c=getchar())!='\n'&&c!=EOF);
+	SAFE_READ(d,"Input the course number you want enter:",number);
 	p = check_course_number(cl_head,number);
 	if(p==NULL){
 		printf("Sorry.Could not find the corresponding course number.\n");
@@ -424,8 +403,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 	}
 	printf("The course:\n");
 	show_cl_item(p);
-	printf("Are you sure?(y/n)");
-	out = getchar(); getchar();
+	SAFE_READ(c,"Are u sure?(y/n)",out);
 	if(out=='y'||out=='Y'){
 		count = HSS;
 		if(p->Category){
@@ -434,8 +412,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 		if(student_temp->elective_credits[count][0]<=student_temp->elective_credits[count][1]){
 			printf("Your course seletion score has met the course criteria.\n");
 			printf("It is recommended to enroll in courses of other categorise.\n");
-			printf("continue?(y/n)");
-			out = getchar();getchar();
+			SAFE_READ(c,"continue?(y/n)",out);
 			if(out=='y'||out=='Y');
 			else {
 				printf("Go back now.\n");
@@ -484,9 +461,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 			secp[count++] = &student_temp->elective_credits[SS][1];
 		}
 	}
-	printf("Input the course number to cancel:");
-	scanf("%d",&number);
-	while((c=getchar())!='\n'&&c!=EOF);
+	SAFE_READ(d,"Input the course number to cancel:",number);
 	p = check_course_number(cl_head,number);
 	if(p==NULL){
 		printf("Cannot find.\n");
@@ -494,8 +469,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 	}
 	printf("The course information:\n");
 	show_cl_item(p);
-	printf("Are you sure?(y/n)");
-	out = getchar(); getchar();
+	SAFE_READ(c,"Are you sure?(y/n)",out);
 	if(out=='y'||out=='Y'){
 		p->Current_Students--;
 		for(i=0;i<2;i++){

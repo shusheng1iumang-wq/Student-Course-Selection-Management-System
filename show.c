@@ -5,6 +5,8 @@
 #include "student.h"
 #include<errno.h>
 
+
+
 extern Bool Open_Student_Course;
 
 void show_major_code_menu(void){
@@ -15,7 +17,6 @@ void show_major_code_menu(void){
 	printf("3->Fresh the File\n");
 	printf("4->Go back\n");
 	printf("5->Exit\n");
-	printf("Your choose:\n");
 }
 
 void show_student_menu(void){
@@ -26,7 +27,6 @@ void show_student_menu(void){
 	printf("3->Course registration\n");
 	printf("4->Cancel the course\n");
 	printf("5->exit\n");
-	printf("Your choose:");
 }
 
 void show_admin_student_menu(void)
@@ -38,7 +38,6 @@ void show_admin_student_menu(void)
     printf("3->Fresh the file\n");
     printf("4->go back\n");
     printf("5->exit\n");
-    printf("Your choose:");
 }
 
 void show_admin_menu(void)
@@ -48,7 +47,6 @@ void show_admin_menu(void)
     printf("1->student\n");
     printf("2->major code\n");
     printf("3->exit\n");
-    printf("Your choose:");
 }
 void show_admin_class_menu(void)
 {
@@ -61,7 +59,6 @@ void show_admin_class_menu(void)
     printf("5->Course completion and student score entry.\n");
     printf("6->go back\n");
     printf("7->exit\n");
-    printf("Your choose:");
 }
 
 void Save_SSL(S_Student_List *ssl_head)
@@ -183,8 +180,7 @@ void fresh_file(char* file){
 	char out = 0;
 	FILE *fp=NULL;
 	
-	printf("Are you sure?(y/n)");
-    out = getchar();
+	SAFE_READ(c,"Are you sure?(y/n)",out);
     if(out=='y'||out=='Y'){
        	if(remove(file)!=0){
         	printf("remove error.\n");
@@ -234,14 +230,30 @@ void save_Open_Student_Course(void){
 	fclose(fp);
 }
 
-Bool save_fgets(char*string,int size){
+Bool safe_fgets(char*string,int size){
 	cpystring("",string,size);
-	if((fgets(string,size,stdin))==NULL)return 0;
+	if((fgets(string,size,stdin))==NULL)return OFF;
 	if(strchr(string,'\n')==NULL){
 		int c;
 		while((c=getchar())!='\n'&&c!=EOF);
-		return 0;
+		return OFF;
 	}
 	fgets_demo(string);
-	return 1;
+	return ON;
 }
+
+
+//		已经被我变成宏了   坠机了man!
+//Bool safe_read_int(int*n){
+//	char buffer[BUFFER_LINE];
+//	char check_points = 0;
+//	
+//	while(!safe_fgets(buffer,BUFFER_LINE)){
+//		printf("buffer fgets error!\n");
+//		printf("again:");
+//	}
+//	
+//	if(sscanf(buffer,"%d %c",n,&check_points)==1)return ON;
+//	
+//	return OFF;
+//}
