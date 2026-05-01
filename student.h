@@ -6,7 +6,7 @@
 #define STUDENT_ID_LINE 999999999 // s_id test
 #define THE_TRY_LINE 10           // 尝试次数限制
 #define TIP_TIME 5                // 提示次数线
-#define NAME_LINE 30              // 名字限制
+#define NAME_LINE 100              // 名字限制
 #define KEY_LINE 30               // 最大密码限制
 #define KEY_BOTTOM_LINE 12        // 最小密码限制
 #define HSS 0                     // 人文社科
@@ -47,11 +47,10 @@ typedef struct STUDENT_LIST
 void view_course_grades(S_Student_List *p);       //展示学生个人成绩
 void del_ssl_item(S_Student_List *ssl_head,lli id);   //删除学生元素
 void show_ssl_item(S_Student_List *p);    //展示学生元素
-void input_the_name(S_Student_List *p);   //输入姓名，因为要清空内存，所以我写了函数，
-//但其实可以用cpystring来优化，看看我后面有没有空吧。
 void clean_the_history(S_Student_List *p); // 将选课历史清空
 void give_elective_credits(Bool,S_Student_List*p); // 根据专业代号分配选课分数
-void cpystring(char *paste, char *wall, int size); // 自定义复制字符串函数
+void cpystring(char *paste, char *wall, int size); // 自定义复制字符串函数  
+//也有清空string的作用，好好利用。
 void fgets_demo(char *string); // fgets补丁，去掉'\n'
 Bool key2key(char *key, char *key_input); // 字符串对比，用来比对密码
 Bool password_security(char *key); // 确定密码限制

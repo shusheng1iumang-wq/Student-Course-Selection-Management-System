@@ -18,11 +18,12 @@
 
 void admin_major_menu(Major_Code_List* mcl_head){
 	char* mcl_file="major_code_list.txt";
-	int i = 0;
+	int i = 0,c=0;
 	
 	do{
 		show_major_code_menu();
-		scanf("%d",&i);getchar();
+		scanf("%d",&i);
+		while((c=getchar())!='\n'&&c!=EOF);
 		Read_major_code_list(mcl_head,mcl_file);
 		switch(i){
 			case 0:
@@ -161,14 +162,31 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 		p = (Major_Code_List*)malloc(sizeof(Major_Code_List));
 		clean_mcl_item(p);
 		printf("Input the Major:\n");
-		again4:
-		printf("Major Code:");
-		scanf("%8s",p->code);
-		while((c=getchar())!='\n'&&c!=EOF);
-		if(strcmp(p->code,"000000")<0){
-			printf("Your input is illegal.\n");
-			goto again4;
-		}
+		
+		do{
+			flag = OFF;
+			printf("Major Code:");
+			while(!save_fgets(p->code,CODE_LINE)){
+				printf("fgets error!\n");
+				printf("Major Code:");
+			}
+			if(strcmp(p->code,"0000000")<0){
+				printf("Your input is illegal\n");
+				flag = ON;
+			}
+		}while(flag);
+
+// 	again逻辑用上面的do while 代替		
+//		again4:
+//		printf("Major Code:");
+//		fgets(p->code,CODE_LINE,stdin);
+//		fgets_demo(p->code);
+//		while((c=getchar())!='\n'&&c!=EOF);
+//		if(strcmp(p->code,"000000")<0){
+//			printf("Your input is illegal.\n");
+//			goto again4;
+//		}
+		
 		if((same=Search_mcl_item_code(mcl_head,p->code))!=NULL){
 			printf("There have a same one.\n");
 			show_mcl_item(same);
@@ -183,9 +201,13 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 				free(p);
 			}
 		}
+		
 		printf("Major Name:");
-		fgets(p->name,COURSE_NAME_LINE,stdin);
-		fgets_demo(p->name);
+		while(!save_fgets(p->name,COURSE_NAME_LINE)){
+			printf("fgets error!\n");
+			printf("Major Name:");
+		}
+		
 		p->Category = code2category(p->code);
 		
 		Insert(mcl_head,p);
@@ -297,8 +319,10 @@ void Delete_mcl_item(Major_Code_List*mcl_head){
 	Major_Code_List* l = mcl_head;
 	
 	printf("Input the Major Code to delete:");
-	scanf("%24s",code);
-	while((c=getchar())!='\n'&&c!=EOF);
+	while(!save_fgets(code,CODE_LINE)){
+		printf("fgets error!\n");
+		printf("Input the Major Code to delete:");
+	}
 	
 	if((p=Search_mcl_item_code(mcl_head,code))==NULL){
 		printf("Counld not find the %s\n",code);

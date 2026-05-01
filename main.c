@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 {
 	//SetConsoleOutputCP(65001);   //编码统一，之前调试一直有bug
     S_Student_List *p = NULL;
-    int i = 0;
+    int i = 0,c=0;
     S_Student_List student_temp ={0};
 	read_Open_Student_Course();
     Read_SSL(&ssl_head); // 读取
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
         {
             show_admin_menu();
             scanf("%d", &i);
+            while((c=getchar())!='\n'&&c!=EOF);
             switch (i)
             {
             case 0:
@@ -76,6 +77,7 @@ int main(int argc, char *argv[])
         do{
         	show_student_menu();
         	scanf("%d",&i);
+        	while((c=getchar())!='\n'&&c!=EOF);
         	switch(i){
         		case 0:
         			read_cl_list(&cl_head);

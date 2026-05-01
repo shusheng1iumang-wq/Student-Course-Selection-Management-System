@@ -3,6 +3,8 @@
 #include "student.h"
 #include "class.h"
 
+Bool save_fgets(char*string,int size);                 //安全的输入函数
+//包括清空 ，检查，清空缓存
 void save_Open_Student_Course(void);          //保存 课程开关
 void read_Open_Student_Course(void);         //读取 课程开关
 void show_major_code_menu(void);                              //专业号菜单--管理员

@@ -1,6 +1,7 @@
 #include "show.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "student.h"
 #include<errno.h>
 
@@ -231,4 +232,16 @@ void save_Open_Student_Course(void){
 	}
 	
 	fclose(fp);
+}
+
+Bool save_fgets(char*string,int size){
+	cpystring("",string,size);
+	if((fgets(string,size,stdin))==NULL)return 0;
+	if(strchr(string,'\n')==NULL){
+		int c;
+		while((c=getchar())!='\n'&&c!=EOF);
+		return 0;
+	}
+	fgets_demo(string);
+	return 1;
 }

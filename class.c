@@ -8,7 +8,7 @@ extern Bool Open_Student_Course;
 
 void admin_class_menu(Class_List *cl_head)
 {
-    int i = 0;
+    int i = 0,c=0;
     char out = 0;
     Class_List *temp = NULL;
     FILE* fp=NULL;
@@ -18,7 +18,7 @@ void admin_class_menu(Class_List *cl_head)
     {
         show_admin_class_menu();
         scanf("%d", &i);
-        getchar();
+        while((c=getchar())!='\n'&&c!=EOF);
         read_cl_list(cl_head);
         read_Open_Student_Course();
         switch (i)
@@ -34,7 +34,7 @@ void admin_class_menu(Class_List *cl_head)
             {
                 printf("Input the Course Number to delete:");
                 scanf("%d", &i);
-                getchar();
+                while((c=getchar())!='\n'&&c!=EOF);
                 temp = check_course_number(cl_head, i);
 
                 if (temp != NULL)
@@ -44,6 +44,7 @@ void admin_class_menu(Class_List *cl_head)
                     show_cl_item(temp);
                     printf("Ready to delete?(y/n)");
                     scanf("%c", &out);
+                    while((c=getchar())!='\n'&&c!=EOF);
 
                     if (out == 'y' || out == 'Y')
                     {
@@ -63,9 +64,9 @@ void admin_class_menu(Class_List *cl_head)
                 save_cl_list(cl_head);
 
                 flag = OFF;
-                getchar();
                 printf("continue?(y/n)");
                 scanf("%c", &out);
+                while((c=getchar())!='\n'&&c!=EOF);
                 if (out == 'y' || out == 'Y')
                     flag = ON;
             } while (flag);
@@ -119,7 +120,7 @@ void Course_Entry(Class_List *cl_head)
     re_entry:
         printf("Course Number:");
         scanf("%d", &p->Course_Number);
-        getchar();
+        while((c=getchar())!='\n'&&c!=EOF);
         temp = check_course_number(cl_head, p->Course_Number);
         if (temp != NULL)
         {
@@ -133,7 +134,7 @@ void Course_Entry(Class_List *cl_head)
                 printf("2->exit\n");
                 printf("Your choose:");
                 scanf("%d", &i);
-                getchar();
+                while((c=getchar())!='\n'&&c!=EOF);
             } while (i != 0 && i != 1 && i != 2);
             if (i == 0)
             {
@@ -152,22 +153,24 @@ void Course_Entry(Class_List *cl_head)
         }
 
         printf("Course Name:");
-        cpystring("", p->Course_Name, COURSE_NAME_LINE); //     ? 
-        scanf("%100s",p->Course_Name);
-		while((c=getchar())!='\n'&&c!=EOF);
+        while(!save_fgets(p->Course_Name,COURSE_NAME_LINE)){
+        	printf("fgets error!\n");
+        	printf("Course Name:");
+		}
 
         printf("Credits:");
         scanf("%lf", &p->Credits);
-        getchar();
+        while((c=getchar())!='\n'&&c!=EOF);
 
         printf("Lecturer:");
-        cpystring("", p->Lecturer, NAME_LINE);
-        scanf("%30s",p->Lecturer);
-        while((c=getchar())!='\n'&&c!=EOF);
+        while(!save_fgets(p->Lecturer,NAME_LINE)){
+        	printf("fgets error!\n");
+        	printf("Lecturer:");
+		}
 
         printf("Max Seats:");
         scanf("%d", &p->Max_Enrollment);
-
+		while((c=getchar())!='\n'&&c!=EOF);
         p->Current_Students = 0;
 
         printf("Category:\n");
@@ -175,6 +178,7 @@ void Course_Entry(Class_List *cl_head)
         do
         {
             scanf("%d", &i);
+            while((c=getchar())!='\n'&&c!=EOF);
         } while (i != 0 && i != 1);
         p->Category = i;
         p->next = NULL;
@@ -183,7 +187,8 @@ void Course_Entry(Class_List *cl_head)
 
         getchar();
         printf("continue?(y/n)");
-        scanf("%c", &out);getchar();
+        scanf("%c", &out);
+        while((c=getchar())!='\n'&&c!=EOF);
         if (out == 'n' || out == 'N')
             flag = OFF;
 
@@ -284,6 +289,8 @@ void save_cl_list(Class_List *cl_head)
             exit(1);
         }
     }
+    
+    fclose(fp);
 }
 
 void read_cl_list(Class_List *cl_head)
@@ -381,7 +388,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 	int number=0;
 	char out = 0;
 	Class_List* p =NULL;
-	int i = 0;
+	int i = 0,c=0;
 	int count = 0;
 	
 	for(i=0;i<10;i++){
@@ -404,7 +411,8 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 		return;
 	}
 	printf("Input the course number you want enter:");
-	scanf("%d",&number);getchar();
+	scanf("%d",&number);
+	while((c=getchar())!='\n'&&c!=EOF);
 	p = check_course_number(cl_head,number);
 	if(p==NULL){
 		printf("Sorry.Could not find the corresponding course number.\n");
@@ -449,7 +457,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 }
 
 void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
-	int i = 0 ;
+	int i = 0 ,c=0;
 	int number = 0;
 	char out = 0;
 	int count = 0 ;
@@ -477,7 +485,8 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 		}
 	}
 	printf("Input the course number to cancel:");
-	scanf("%d",&number);getchar();
+	scanf("%d",&number);
+	while((c=getchar())!='\n'&&c!=EOF);
 	p = check_course_number(cl_head,number);
 	if(p==NULL){
 		printf("Cannot find.\n");

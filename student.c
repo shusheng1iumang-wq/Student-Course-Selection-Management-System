@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "student.h"
+#include "show.h"
 #include"major_code.h"
 
 /*
@@ -17,12 +18,12 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     lli s_id = 0;
     char key[KEY_LINE]={0};
     char out=0;
-    int i;
+    int i,c=0;
     //check
     do{
     printf("Student ID:\n");
     scanf("%lld",&s_id);
-    getchar();
+    while((c=getchar())!='\n'&&c!=EOF);
 	}while(s_id<STUDENT_ID_LINE);
 	
 	if(s_id==STUDENT_ID_LINE)p=ssl_head;
@@ -33,17 +34,18 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
     	do{	
     		flag=OFF;
     		printf("Pass Word:\n");
-    		if((fgets(key,KEY_LINE,stdin))!=NULL){
-    			fgets_demo(key);
-    			flag=key2key(p->key,key);
-			}else{
-				i++;
-				printf("input error!\n");
+    		while(!save_fgets(key,KEY_LINE)){
+    			printf("fgets error!\n");
+    			printf("Pass Word:");
+			}
+			flag=key2key(p->key,key);
+			i++;
+			if(!flag){
 				if(i>=TIP_TIME){
 					printf("Your have %d times to try!\n",THE_TRY_LINE-i);
 					printf("Do you want to exit?(y/n)");
 					scanf("%c",&out);
-					getchar();
+					while((c=getchar())!='\n'&&c!=EOF);
 					if(out=='y'||out=='Y')exit(0);
 				}
 				if(i==THE_TRY_LINE){
@@ -57,7 +59,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)
 		printf("I can't find your information.\n");
 		printf("Do you want to create your account?(y/n)");
 		scanf("%c",&out);
-		getchar();
+		while((c=getchar())!='\n'&&c!=EOF);
 		if(out=='n'||out=='N'){
 			printf("See you.");
 			exit(0);
@@ -83,7 +85,7 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	char key1[KEY_LINE]={0};
 	char key2[KEY_LINE]={0};
 	char out=0;
-	int i=0;
+	int i=0,c=0;
 	char major_code[CODE_LINE]={0}; 
 	
 	if((p = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
@@ -98,11 +100,10 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 		printf("Your password needs to be at least 12 characters long\n");
 		printf("and contain uppercase and lowercase letters\n");
 		printf("as well as other characters like\"#\"\n");
-		if((fgets(key1,KEY_LINE,stdin))==NULL){
-			printf("fgets error!\n");
-			exit(1);
+		while(!save_fgets(key1,KEY_LINE)){
+			printf("fgets_error!\n");
+			printf("input again:");
 		}
-		fgets_demo(key1);
 		flag = password_security(key1);
 	}while(!flag);
 	
@@ -114,14 +115,13 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 		if(i>=TIP_TIME){
 			printf("We can go back to set up password,do we?(Y/N)");
 			scanf("%c",&out);
-			getchar();
+			while((c=getchar())!='\n'&&c!=EOF);
 			if(out=='y'||out=='Y')goto again;
 		}
-		if((fgets(key2,KEY_LINE,stdin))==NULL){
+		while(!save_fgets(key2,KEY_LINE)){
 			printf("fgets error!\n");
-			exit(1);
+			printf("input again:");
 		}
-		fgets_demo(key2);
 		flag = key2key(key2,p->key);
 		i++;
 	}while(!flag);
@@ -129,28 +129,43 @@ S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	printf("Congratulation!\n");
 
 	Read_major_code_list(&mcl_head,MCL_FILE);	
-		
-	again_2:	
+	
+	do{
 		printf("Your major code:");
-		fgets(major_code,CODE_LINE,stdin);
-		fgets_demo(major_code);
-		mcl_p=Search_mcl_item_code(&mcl_head,major_code);
-		if(mcl_p==NULL){
-			printf("Could not fine your major code.\n");
-			goto again_2;
+		while(!save_fgets(major_code,CODE_LINE)){
+			printf("fgets error!");
+			printf("\nYour major code:");
 		}
+		mcl_p = Search_mcl_item_code(&mcl_head,major_code);
+		if(mcl_p==NULL)printf("Could not find your major code.\n");
+	}while(mcl_p==NULL);
+
+//   这是again版本，但是我觉得不太舒服，写了上面的优化版本。		
+//	again_2:	
+//		printf("Your major code:");
+//		fgets(major_code,CODE_LINE,stdin);
+//		fgets_demo(major_code);
+//		mcl_p=Search_mcl_item_code(&mcl_head,major_code);
+//		if(mcl_p==NULL){
+//			printf("Could not fine your major code.\n");
+//			goto again_2;
+//		}
 	
 	cpystring(major_code,p->major_code,CODE_LINE);
 	cpystring(mcl_p->name,p->major_name,COURSE_NAME_LINE);
-	
+		
 	give_elective_credits(mcl_p->Category,p);
 		
 	free_malloc_mcl(&mcl_head);
 	
 	clean_the_history(p);
 	
-	input_the_name(p);
-	fgets_demo(p->name);
+	cpystring("",p->name,NAME_LINE);
+	printf("Your name:");
+	while(!save_fgets(p->name,NAME_LINE)){
+		printf("fgets error!\n");
+		printf("Your name:");
+	}
 	
 	Insert_account(ssl_head,p);
 	
@@ -260,18 +275,6 @@ void clean_the_history(S_Student_List *p){
 		p->elective_record[1][i][0]=0;
 		p->elective_record[0][i][1]=0;
 		p->elective_record[1][i][1]=0;
-	}
-}
-
-void input_the_name(S_Student_List *p){
-	int i=0;
-	for(i=0;i<NAME_LINE;i++){
-		p->name[i]=0;
-	}
-	printf("Your name:");
-	if((fgets(p->name,NAME_LINE,stdin))==NULL){
-		printf("fgets error!");
-		exit(1);
 	}
 }
 

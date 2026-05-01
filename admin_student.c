@@ -11,12 +11,13 @@ void admin_student_menu(S_Student_List *ssl_head)
 {
     int i = 0;
     char *ssl_file="Student_list.txt";
+    int c=0;
 
     do
     {
         show_admin_student_menu();
         scanf("%d", &i);
-        getchar();
+        while((c=getchar())!='\n'&&c!=EOF);
         Read_SSL(ssl_head);
         switch (i)
         {
@@ -54,11 +55,16 @@ void Student_Entry(S_Student_List* ssl_head){
 	Major_Code_List *mcl_p=NULL;
 	int c=0;
 	
+	Read_major_code_list(&mcl_head,MCL_FILE);
+	
 	do{
 		flag =OFF;
-		again:
-		printf("The Student ID:");
-		scanf("%lld",&id);getchar();
+		do{
+			again:
+			printf("The Student ID:");
+			scanf("%lld",&id);
+			while((c=getchar())!='\n'&&c!=EOF);
+		}while(id<=STUDENT_ID_LINE);
 		
 		p = Search_Student_ID(ssl_head,id);
 		if(p!=NULL){
@@ -66,14 +72,15 @@ void Student_Entry(S_Student_List* ssl_head){
 			show_ssl_item(p);
 			printf("Do you want to delete this?(y/n)");
 			scanf("%c",&out);
+			while((c=getchar())!='\n'&&c!=EOF);
 			
 			if(out=='y'||out=='Y'){
 				del_ssl_item(ssl_head,id);
 				printf("finshed!let's continue.\n");
 			}else{
 				printf("continue?(y/n)");
-				getchar();
 				scanf("%c",&out);
+				while((c=getchar())!='\n'&&c!=EOF);
 				if(out=='y'||out=='Y'){
 					goto again;
 				}else{
@@ -86,19 +93,20 @@ void Student_Entry(S_Student_List* ssl_head){
 		p->ID = id;
 		cpystring("123456789&&Gdut",p->key,15);
 		
-		
-		Read_major_code_list(&mcl_head,MCL_FILE);
-
 		again3:
 		printf("Major Code:");
-		scanf("%24s",p->major_code);
-		while((c=getchar())!='\n'&&c!=EOF);
+		while(!save_fgets(p->major_code,CODE_LINE)){
+			printf("fgets error!\n");
+			printf("input again:");
+		}
+		
 		mcl_p = Search_mcl_item_code(&mcl_head,p->major_code);
 		
 		if(mcl_p==NULL){
 			printf("Could find this major_code.\n");
 			printf("Do you want to inout again?(y/n)");
-			scanf("%c",&out);getchar();
+			scanf("%c",&out);
+			while((c=getchar())!='\n'&&c!=EOF);
 			if(out=='y'||out=='Y')goto again3;
 			free(p);
 			free_malloc_mcl(&mcl_head);
@@ -110,8 +118,11 @@ void Student_Entry(S_Student_List* ssl_head){
 		free_malloc_mcl(&mcl_head);
 		
 		printf("Name:");
-		scanf("%30s",p->name);
-		while((c=getchar())!='\n'&&c!=EOF);
+		while(!save_fgets(p->name,NAME_LINE)){
+			printf("fgets error!\n");
+			printf("input again:");
+		}
+		
 		
 		Insert_account(ssl_head,p);
 		
@@ -120,7 +131,10 @@ void Student_Entry(S_Student_List* ssl_head){
 		out = getchar();
 		if(out=='Y'||out=='y')flag=ON;
 		
+		
 	}while(flag);
+	
+	free_malloc_mcl(&mcl_head); 
 }
 
 void Browse_Student(S_Student_List* ssl_head){
@@ -157,12 +171,14 @@ void Browse_Student(S_Student_List* ssl_head){
 void Delete_Student_item(S_Student_List* ssl_head){
 	lli id = 0;
 	char out = 0;
+	int c=0;
 	S_Student_List *p = NULL;
 	
 	do{
 		flag =OFF;
 		printf("Input student id to delete:");
-		scanf("%lld",&id);getchar();
+		scanf("%lld",&id);
+		while((c=getchar())!='\n'&&c!=EOF);
 		p = Search_Student_ID(ssl_head,id);
 		
 		if(p==NULL){
