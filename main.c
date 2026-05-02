@@ -116,6 +116,14 @@ int main(int argc, char *argv[])
         			free_malloc_ssl_list(&ssl_head);
         			break;
         		case 5:
+     				change_password(&student_temp);
+     				Read_SSL(&ssl_head);
+        			p = Search_Student_ID(&ssl_head,student_temp.ID);
+        			copy_ssl(&student_temp, p);
+        			Save_SSL(&ssl_head);
+        			free_malloc_ssl_list(&ssl_head);
+        			break;
+        		case 6:
         			printf("See you!\n");
         			exit(0);
         			break;

@@ -46,6 +46,7 @@ typedef struct STUDENT_LIST
     struct STUDENT_LIST *next;
 } S_Student_List;
 
+void change_password(S_Student_List *p);         //修改密码
 void view_course_grades(S_Student_List *p);       //展示学生个人成绩
 void del_ssl_item(S_Student_List *ssl_head,lli id);   //删除学生元素
 void show_ssl_item(S_Student_List *p);    //展示学生元素

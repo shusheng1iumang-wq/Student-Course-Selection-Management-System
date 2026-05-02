@@ -323,3 +323,58 @@ void view_course_grades(S_Student_List *p){
 	//可以函数优化的，看情况吧。
 	
 } 
+
+void change_password(S_Student_List *p){
+	char key[KEY_LINE]={0};
+	char key2[KEY_LINE]={0};     //需要一个用于验证，不要先保存，那样是错误的。
+	Bool flag = OFF;
+	char out = 0;
+	
+	do{
+		printf("Please input the original password:");
+		while(!safe_fgets(key,KEY_LINE)){
+			printf("fgets error!\n");
+			printf("Please input the original password:");
+		}
+		if(!strcmp(key,p->key)){
+			flag = ON;
+			printf("Incorrect password.\n");
+		}
+	}while(!flag);
+	
+	_input_new_:
+	do{
+		printf("Please input your new password:");
+		while(!safe_fgets(key,KEY_LINE)){
+			printf("fgets error!\n");
+			printf("Please input your new password:");
+		}
+		flag = password_security(key);
+		if(!flag){
+			printf("The password security is too low!\n");
+			printf("Your password needs to be at least 12 characters long\n");
+			printf("and contain uppercase and lowercase letters\n");
+			printf("as well as other characters like\"#\"\n");
+			buffer_line();
+		}
+	}while(!flag);
+	
+	do{
+		printf("Please confirm new password:");
+		while(!safe_fgets(key2,KEY_LINE)){
+			printf("fgets error!\n");
+			printf("Please confirm new password:");
+		}
+		flag = !strcmp(key,key2);
+		if(!flag){
+			printf("Incorrect password.\n");
+			SAFE_READ(c,"Do you want to go back?(y/n)",out);
+			if(out=='y'||out=='Y'){
+				goto _input_new_;
+			}
+		}
+	}while(!flag);
+	
+	printf("finshed!");	
+	buffer_line();	
+}

@@ -26,7 +26,8 @@ void show_student_menu(void){
 	printf("2->View courese grades\n");
 	printf("3->Course registration\n");
 	printf("4->Cancel the course\n");
-	printf("5->exit\n");
+	printf("5->Change password.\n");
+	printf("6->exit\n");
 }
 
 void show_admin_student_menu(void)
@@ -259,6 +260,6 @@ Bool safe_fgets(char*string,int size){
 void buffer_line(void){
 	char line[CODE_LINE];
 	do{
-		printf("Press Enter to continue.\n");
+		printf("Press Enter to continue.");
 	}while(!safe_fgets(line,CODE_LINE));
 }
