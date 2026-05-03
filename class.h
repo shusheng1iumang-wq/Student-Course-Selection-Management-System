@@ -2,6 +2,8 @@
 #ifndef __CLASS_HEAD__
 #define __CLASS_HEAD__
 
+#define CL_FILE "class_list.txt"
+
 extern S_Student_List ssl_head;
 
 typedef struct CLASS_LIST
@@ -25,7 +27,7 @@ void course_completion(Class_List*cl_head);                  //结课和成绩�
 void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head);   //取消课程--学生
 void Course_registration(S_Student_List *student_temp,Class_List *cl_head);   //课程报名--学生
 void open_s_c_selection(void);    //选课开关！
-void copy_cl(Class_List *paste, Class_List *Wall);   //复制cl链表
+void copy_cl_without_next(Class_List *paste, Class_List *Wall);   //复制cl链表
 void read_cl_list(Class_List *cl_head);  //读取cl链表，文件读取
 void save_cl_list(Class_List *cl_head);  //保存cl链表
 void delete_cl_item(Class_List *cl_head, int number);  //删除特定cl元素

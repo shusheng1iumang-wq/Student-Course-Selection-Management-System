@@ -10,9 +10,7 @@ extern Major_Code_List mcl_head;
 void admin_student_menu(S_Student_List *ssl_head)
 {
     int i = 0;
-    char *ssl_file="Student_list.txt";
-    int c=0;
-
+    
     do
     {
         show_admin_student_menu();
@@ -32,7 +30,7 @@ void admin_student_menu(S_Student_List *ssl_head)
 	        	Save_SSL(ssl_head);
 	            break;
 	        case 3:
-	        	fresh_file(ssl_file);
+	        	fresh_file(SSL_FILE);
 	        	break;
 	        case 4:
 	        	free_malloc_ssl_list(ssl_head);
@@ -42,6 +40,9 @@ void admin_student_menu(S_Student_List *ssl_head)
 	        	free_malloc_ssl_list(ssl_head);
 	        	exit(0);
 	            break;
+	        default:
+	        	printf("Input the illegal number.\n");
+	        	break;
         }
         free_malloc_ssl_list(ssl_head);
     } while (1);
@@ -52,10 +53,9 @@ void Student_Entry(S_Student_List* ssl_head){
 	char out=0;
 	S_Student_List *p=NULL;
 	Major_Code_List *mcl_p=NULL;
-	int c=0;
 	Bool flag = OFF;
 	
-	Read_major_code_list(&mcl_head,MCL_FILE);
+	Read_major_code_list(&mcl_head);
 	
 	do{
 		flag =OFF;
@@ -133,10 +133,13 @@ void Student_Entry(S_Student_List* ssl_head){
 void Browse_Student(S_Student_List* ssl_head){
 	S_Student_List* p=ssl_head->next;
 	int i;
+	int j=0;
 	
-	printf("| Student ID | Student NAME | m_code |  HSS  |  SS   | major_name\n");
-	
-	while(p!=NULL){
+	for(j=0;p!=NULL;j++,p=p->next){
+		if(j%10==0&&j!=0){
+			buffer_line();
+			printf("| Student ID | Student NAME | m_code |  HSS  |  SS   | major_name\n");
+		}
 		printf("|%12lld|",p->ID);
 		printf("%14s|",p->name);
 		printf("%8s|",p->major_code);
@@ -157,7 +160,6 @@ void Browse_Student(S_Student_List* ssl_head){
 				printf(" ");
 			}else printf("\n");break;
 		}
-		p = p->next;
 	}
 }
 

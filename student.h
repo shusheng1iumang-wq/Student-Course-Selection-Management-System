@@ -1,7 +1,7 @@
 #ifndef _STUDENT_HEAD_
 #define _STUDENT_HEAD_
 
-#define COURSE_NAME_LINE 100  
+#define COURSE_NAME_LINE 100        //课程名
 #define CODE_LINE 24            //code_line
 #define STUDENT_ID_LINE 999999999 // s_id test
 #define THE_TRY_LINE 10           // 尝试次数限制
@@ -13,15 +13,14 @@
 #define SS 1                      // 自然科学
 #define MAX_SCORE 9.0               // 分数分配多
 #define MIN_SCORE 3.0               // 分数分配少
-#define OPEN_FILE "open.txt"
-#define VER_CODE_LINE  10            
-#define USE_VER_CODE 6
+#define OPEN_FILE "open.txt"         //开关文件
+#define SSL_FILE  "Student_list.txt"      //ssl文件
+
 typedef enum{ OFF,ON}Bool;    
 /*自定义开关*/
-Bool extern_flag; // 全局开关
+extern Bool extern_flag; // 全局开关
 //取消全局开关的设置，实际函数嵌套完全局调度会很复杂，不如局部定义。
 //其实给宏就可以了  标明他的全局性质，防止用错
-
 
 // long long int
 typedef long long int lli;
@@ -54,7 +53,6 @@ void clean_the_history(S_Student_List *p); // 将选课历史清空
 void give_elective_credits(Bool,S_Student_List*p); // 根据专业代号分配选课分数
 void cpystring(char *paste, char *wall, int size); // 自定义复制字符串函数  
 //也有清空string的作用，好好利用。
-void fgets_demo(char *string); // fgets补丁，去掉'\n'
 Bool password_security(char *key); // 确定密码限制
 void Insert_account(S_Student_List *ssl_head, S_Student_List *p); // 根据学号插入用户
 S_Student_List *Set_Up_Student_Account(S_Student_List *ssl_head, lli s_id); // 建立学生用户

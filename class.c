@@ -3,16 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "show.h"
-
+#include<errno.h>
 extern Bool Open_Student_Course;
 
+//检查完毕 1
 void admin_class_menu(Class_List *cl_head)
 {
-    int i = 0,c=0;
+    int i = 0;
     char out = 0;
     Class_List *temp = NULL;
     FILE* fp=NULL;
-    char* cl_file="class_list.txt";
 	Bool flag = OFF;
 	
     do
@@ -21,148 +21,142 @@ void admin_class_menu(Class_List *cl_head)
         SAFE_READ(d,"Your choose:",i);
         switch (i)
         {
-        case 0:
-        	read_cl_list(cl_head);
-            Course_Entry(cl_head);
-            free_malloc_cl_list(cl_head); 
-            break;
-        case 1:
-        	read_cl_list(cl_head);
-            Browse_Courses(cl_head);
-            free_malloc_cl_list(cl_head); 
-            break;
-        case 2:
-        	read_cl_list(cl_head);
-        	flag = OFF;
-			do
-            {
-            	SAFE_READ(d,"Input the Course Number to delete:",i);
-                temp = check_course_number(cl_head, i);
-
-                if (temp != NULL)
-                {
-
-                    printf("We found this one:\n");
-                    show_cl_item(temp);
-                    SAFE_READ(c,"Ready to delete?(y/n)",out);
-
-                    if (out == 'y' || out == 'Y')
-                    {
-                        delete_cl_item(cl_head, i);
-                        printf("finshed.\n");
-                    }
-                    else
-                    {
-                        printf("go back.\n");
-                    }
-                }
-                else
-                {
-                    printf("We cannot find the Course Number:%d\n", i);
-                }
-
-                save_cl_list(cl_head);
-
-                flag = OFF;
-                SAFE_READ(c,"continue?(y/n)",out);
-                if (out == 'y' || out == 'Y')
-                    flag = ON;
-            } while (flag);
-            free_malloc_cl_list(cl_head); 
-            //有空优化一下，程序可读性差了
-            break;
-        case 3:
-			fresh_file(cl_file);
-        	break;
-        case 4:
-        	open_s_c_selection();
-        	break;
-        case 5:
-        	read_cl_list(cl_head);
-        	course_completion(cl_head);
-        	if(cl_head->next!=NULL)free_malloc_cl_list(cl_head); 
-        	break;
-        case 6:
-            return;
-            break;
-        case 7:
-            exit(1);
-            break;
-        default:
-            break;
+	        case 0:
+	        	read_cl_list(cl_head);
+	            Course_Entry(cl_head);
+	            free_malloc_cl_list(cl_head); 
+	            break;
+	        case 1:
+	        	read_cl_list(cl_head);
+	            Browse_Courses(cl_head);
+	            free_malloc_cl_list(cl_head); ;
+	            break;
+	        case 2:
+	        	read_cl_list(cl_head);
+	        	flag = OFF;
+				do
+	            {
+	            	SAFE_READ(d,"Input the Course Number to delete:",i);
+	                temp = check_course_number(cl_head, i);
+	
+	                if (temp != NULL)
+	                {
+	
+	                    printf("We found this one:\n");
+	                    show_cl_item(temp);
+	                    SAFE_READ(c,"Ready to delete?(y/n)",out);
+	
+	                    if (out == 'y' || out == 'Y')
+	                    {
+	                        delete_cl_item(cl_head, i);
+	                        printf("finshed.\n");
+	                    }
+	                    else
+	                    {
+	                        printf("go back.\n");
+	                    }
+	                }
+	                else
+	                {
+	                    printf("We cannot find the Course Number:%d\n", i);
+	                }
+	
+	                save_cl_list(cl_head);
+	
+	                flag = OFF;
+	                SAFE_READ(c,"continue?(y/n)",out);
+	                if (out == 'y' || out == 'Y')
+	                    flag = ON;
+	            } while (flag);
+	            free_malloc_cl_list(cl_head); 
+	            break;
+	        case 3:
+				fresh_file(CL_FILE);
+	        	break;
+	        case 4:
+	        	open_s_c_selection();
+	        	break;
+	        case 5:
+	        	read_cl_list(cl_head);
+	        	course_completion(cl_head);
+	        	if(cl_head->next!=NULL)free_malloc_cl_list(cl_head); 
+	        	break;
+	        case 6:
+	            return;
+	            break;
+	        case 7:
+	            exit(1);
+	            break;
+	        default:
+	        	printf("Input the illegal number.\n");
+	            break;
         }
-        
+        buffer_line();
     } while (1);
 }
 
+//检查完毕 
 void Course_Entry(Class_List *cl_head)
 {
     Class_List *p = NULL;
     Class_List *temp = NULL;
+    Class_List temp_class = {0};
     int i;
-    char out = 0;
-    FILE *fp = NULL;
-    char *cl_file = "class_list.txt";
-    char c=0;
-	
+    char out = 0;	
 	Bool flag = ON;
 
     do
     {	
     	flag = ON;
-        if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
-        {
-            printf("malloc error!");
-            exit(1);
-        }
 
-    re_entry:
-    	SAFE_READ(d,"Course Number:",p->Course_Number);
-        temp = check_course_number(cl_head, p->Course_Number);
+    _re_entry_:
+    	SAFE_READ(d,"Course Number:",temp_class.Course_Number);
+        temp = check_course_number(cl_head,temp_class.Course_Number);
         if (temp != NULL)
         {
             printf("There have the same Course Number.\n");
             show_cl_item(temp);
+            buffer_line();
             do
             {
+            	printf("---------------------\n");
                 printf("What do you want?\n");
                 printf("0->delete\n");
                 printf("1->re-entry\n");
-                printf("2->exit\n");
+                printf("2->go back\n");
+                printf("---------------------\n");
                 SAFE_READ(d,"Your choose:",i);
             } while (i != 0 && i != 1 && i != 2);
             if (i == 0)
             {
-                delete_cl_item(cl_head, p->Course_Number);
+                delete_cl_item(cl_head, temp_class.Course_Number);
             }
             else if (i == 1)
             {
-                goto re_entry;
+                goto _re_entry_;
             }
             else if (i == 2)
             {
-                free(p);
                 return;
             }
-            //ÕâÒ»¶Îdo while¿ÉÒÔÓÅ»¯Ò»ÏÂ
         }
 
         printf("Course Name:");
-        while(!safe_fgets(p->Course_Name,COURSE_NAME_LINE)){
+        while(!safe_fgets(temp_class.Course_Name,COURSE_NAME_LINE)){
         	printf("fgets error!\n");
         	printf("Course Name:");
 		}
 		
-		SAFE_READ(lf,"Credits:",p->Credits);
+		SAFE_READ(lf,"Credits:",temp_class.Credits);
 
         printf("Lecturer:");
-        while(!safe_fgets(p->Lecturer,NAME_LINE)){
+        while(!safe_fgets(temp_class.Lecturer,NAME_LINE)){
         	printf("fgets error!\n");
         	printf("Lecturer:");
 		}
 
-		SAFE_READ(d,"Max Seats:",p->Max_Enrollment);
-        p->Current_Students = 0;
+		SAFE_READ(d,"Max Seats:",temp_class.Max_Enrollment);
+        temp_class.Current_Students = 0;
 
         printf("Category:\n");
         printf("0->HSS,1->SS\n");
@@ -170,27 +164,33 @@ void Course_Entry(Class_List *cl_head)
         {
         	SAFE_READ(d,"",i);
         } while (i != 0 && i != 1);
-        p->Category = i;
-        p->next = NULL;
-
+        temp_class.Category = i;
+		
+		if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
+        {
+            printf("malloc error!");
+            exit(1);
+        }
+		
+		copy_cl_without_next(&temp_class,p);
+		p->next = NULL;
+		
         Insert_class(p, cl_head);
 		
 		SAFE_READ(c,"continue?(y/n)",out);
-        if (out == 'n' || out == 'N')
-            flag = OFF;
+        if (out == 'n' || out == 'N')flag = OFF;
 
     } while (flag);
 
     save_cl_list(cl_head);
-
-    fclose(fp);
 }
 
+//检查完毕 1
 void Insert_class(Class_List *p, Class_List *head)
 {
     Class_List *l = head;
     Class_List *r = head->next;
-    while (r && r->Course_Number < p->Course_Number)
+    while (r!=NULL && r->Course_Number < p->Course_Number)
     {
         l = r;
         r = r->next;
@@ -199,9 +199,10 @@ void Insert_class(Class_List *p, Class_List *head)
     p->next = r;
 }
 
+//检查完毕 1
 void free_malloc_cl_list(Class_List *cl_head)
 {
-    Class_List *l = cl_head;
+    Class_List *l = NULL;
     Class_List *r = cl_head->next;
     while (r != NULL)
     {
@@ -212,6 +213,7 @@ void free_malloc_cl_list(Class_List *cl_head)
     cl_head->next = NULL;
 }
 
+//检查完毕 1
 Class_List *check_course_number(Class_List *cl_head, int number)
 {
     Class_List *p = NULL;
@@ -228,6 +230,7 @@ Class_List *check_course_number(Class_List *cl_head, int number)
     return p;
 }
 
+//检查完毕 1
 void delete_cl_item(Class_List *cl_head, int number)
 {
     Class_List *l = cl_head;
@@ -255,68 +258,69 @@ void delete_cl_item(Class_List *cl_head, int number)
     }
 }
 
+//检查完毕 1
 void save_cl_list(Class_List *cl_head)
 {
     FILE *fp = NULL;
-    char *cl_file = "class_list.txt";
-    Class_List *p = NULL;
-    Class_List *head = cl_head->next;
+    Class_List *p = cl_head->next;
 
-    if ((fp = fopen(cl_file, "wb")) == NULL)
+    if ((fp = fopen(CL_FILE, "wb")) == NULL)
     {
         printf("fopen error!\n");
         exit(1);
     }
-    while (head != NULL)
+    while (p != NULL)
     {
-        p = head;
-        head = head->next;
-        if ((fwrite(p, sizeof(Class_List) - sizeof(p->next), 1, fp)) != 1)
+        if ((fwrite(p, sizeof(Class_List) - sizeof(cl_head->next), 1, fp)) != 1)
         {
             printf("fwrite error!\n");
             exit(1);
         }
+        p = p->next;
     }
     
     fclose(fp);
 }
 
+//检查完毕 1
 void read_cl_list(Class_List *cl_head)
 {
     FILE *fp = NULL;
-    char *cl_file = "class_list.txt";
     Class_List *p = NULL;
     Class_List temp_cl = {0};
-    Class_List cleaner={0};
-
-    if ((fp = fopen(cl_file, "rb")) == NULL)
+	Class_List cleaner={0};
+	
+    while((fp = fopen(CL_FILE, "rb")) == NULL)
     {
-        printf("%s fopen error!\n", cl_file);
-        exit(1);
+    	if(errno==ENOENT){
+    		save_cl_list(cl_head);
+		}
+    	else{
+        	printf("%s fopen error!\n", CL_FILE);
+        	exit(1);
+        }
     }
-//清空一下cl，没有清空函数，暂时用cpy来代替一下，后面看看有没有必要写一个。
 	
     while ((fread(&temp_cl, sizeof(Class_List) - sizeof(temp_cl.next), 1, fp)) == 1)
-    {	
-    	
+    {		
         if ((p = (Class_List *)malloc(sizeof(Class_List))) == NULL)
         {
             printf("read_cl_list malloc error!\n");
             exit(1);
         }
-        copy_cl(&temp_cl, p);
+        copy_cl_without_next(&temp_cl, p);
         p->next = NULL;
         cl_head->next = p;
         cl_head = cl_head->next;
-        copy_cl(&cleaner, &temp_cl); 
+        copy_cl_without_next(&cleaner,&temp_cl);
     }
 
     fclose(fp);
 }
 
-void copy_cl(Class_List *paste, Class_List *Wall)
+//检查完毕 1
+void copy_cl_without_next(Class_List *paste, Class_List *Wall)
 {
-
     Wall->Course_Number = paste->Course_Number;
     cpystring(paste->Course_Name, Wall->Course_Name, COURSE_NAME_LINE);
     Wall->Credits = paste->Credits;
@@ -326,14 +330,18 @@ void copy_cl(Class_List *paste, Class_List *Wall)
     Wall->Category = paste->Category;
 }
 
+//检查完毕 1
 void Browse_Courses(Class_List *cl_head)
 {
     Class_List *r = cl_head->next;
-
-    printf("Course Number | Credits | Lecturer | Seats | Category |Course Name\n");
-
-    while (r != NULL)
+	int i = 0;
+    
+    for(i=0;r != NULL;i++)
     {
+    	if(i%20==0&&i!=0){
+        	buffer_line();
+        	printf("Course Number | Credits | Lecturer | Seats | Category |Course Name\n");
+		}
         printf("%14d|", r->Course_Number);
         printf("%9.1f|", r->Credits);
         printf("%10s|", r->Lecturer);
@@ -345,9 +353,11 @@ void Browse_Courses(Class_List *cl_head)
         printf("|%s",r->Course_Name);
         printf("\n");
         r = r->next;
+
     }
 }
 
+//检查完毕
 void open_s_c_selection(void){
 	char out = 0;
 	Bool flag = OFF;
@@ -377,7 +387,7 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 	int number=0;
 	char out = 0;
 	Class_List* p =NULL;
-	int i = 0,c=0;
+	int i = 0;
 	int count = 0;
 	
 	for(i=0;i<10;i++){
@@ -490,6 +500,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 	}
 }
 
+//检查完毕？
 void course_completion(Class_List*cl_head){
 	read_Open_Student_Course();
 	if(Open_Student_Course==ON){
@@ -555,12 +566,16 @@ void course_completion(Class_List*cl_head){
 		r = r->next;
 	}
 	
-	printf("Let's input the score:\n");
-	for(i=0;i<current;i++){
-		printf("ID->%lld:",ecs_Array[i].ID);
-		SAFE_READ(lf,"",*ecs_Array[i].score);
+	if(count!=current){
+		printf("The actual number of participants does not match the number of registrants");
+	}else{
+		printf("Let's input the score:\n");
+		for(i=0;i<count;i++){
+			printf("ID->%lld:",ecs_Array[i].ID);
+			SAFE_READ(lf,"score:",*ecs_Array[i].score);
+		}
+		printf("finshed.\n");
 	}
-	printf("finshed.\n");
 	Save_SSL(&ssl_head);
 	free_malloc_ssl_list(&ssl_head);
 	if(ecs_Array!=NULL)free(ecs_Array);

@@ -12,6 +12,8 @@
 */
 extern Major_Code_List mcl_head;            //全局变量major_code——list
 // function of inquiry for new users
+
+//检查完毕 1
 S_Student_List *Inquiry_User(S_Student_List *ssl_head)        //问询入口
 {	
 	S_Student_List *p=NULL;                   // ssl指针
@@ -39,6 +41,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)        //问询入口
 			i++;
 			if(!strcmp(key,p->key))flag=ON;
 			else{
+				printf("Incorrect password!\n");
 				if(i>=TIP_TIME){
 					printf("Your have %d times to try!\n",THE_TRY_LINE-i);
 					SAFE_READ(c,"Do you want to exit?(y/n)",out);
@@ -63,6 +66,7 @@ S_Student_List *Inquiry_User(S_Student_List *ssl_head)        //问询入口
 	return p;
 };
 
+//检查完毕 1
 S_Student_List *Search_Student_ID(S_Student_List* ssl_head,lli s_id){
 	while(ssl_head!=NULL&&ssl_head->ID!=s_id){
 		ssl_head=ssl_head->next;
@@ -70,127 +74,107 @@ S_Student_List *Search_Student_ID(S_Student_List* ssl_head,lli s_id){
 	return ssl_head;
 }
 
+//检查完毕 1
 S_Student_List* Set_Up_Student_Account(S_Student_List* ssl_head,lli s_id){
 	S_Student_List *p=NULL;
 	Major_Code_List *mcl_p=NULL;
+	S_Student_List temp_student={0};
 	char key1[KEY_LINE]={0};
 	char out=0;
-	int i=0,c=0;
-	char major_code[CODE_LINE]={0}; 
+	int i=0;
 	Bool flag = OFF;
 	
-	if((p = (S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
-		printf("malloc error!\n");
-		exit(1);
-	};
-	p->ID = s_id;
-	again:
+	temp_student.ID = s_id;
+	_set_up_again_:
 	do{	
-		printf("Your password needs to be at least 12 characters long\n");
-		printf("and contain uppercase and lowercase letters\n");
-		printf("as well as other characters like\"#\"\n");
 		printf("Your Password:");
-		while(!safe_fgets(key1,KEY_LINE)){
+		while(!safe_fgets(temp_student.key,KEY_LINE)){
 			printf("fgets_error!\n");
 			printf("Your Password:");
 		}
-		flag = password_security(key1);
+		flag = password_security(temp_student.key);
+		if(!flag){
+			printf("The password security is too low.\n");
+			printf("Your password needs to be at least 12 characters long\n");
+			printf("and contain uppercase and lowercase letters\n");
+			printf("as well as other characters like\"#\"\n");
+			buffer_line();
+		}
 	}while(!flag);
 	
-	cpystring(key1,p->key,KEY_LINE);
 	i = 0;
 	do{
 		if(i>=TIP_TIME){
 			SAFE_READ(c,"We can go back to set up password,do we?(Y/N)",out);
-			if(out=='y'||out=='Y')goto again;
+			if(out=='y'||out=='Y')goto _set_up_again_;
 		}
 		printf("Confirm Password:");
 		while(!safe_fgets(key1,KEY_LINE)){
 			printf("fgets error!\n");
 			printf("Confirm Password:");
 		}
-		if(!strcmp(key1,p->key))flag=ON;
+		if(!strcmp(key1,temp_student.key))flag=ON;
 		i++;
 	}while(!flag);
 	
 	printf("Congratulation!\n");
 	buffer_line();
 	
-	Read_major_code_list(&mcl_head,MCL_FILE);	
+	Read_major_code_list(&mcl_head);	
 	
 	do{
 		printf("Your major code:");
-		while(!safe_fgets(major_code,CODE_LINE)){
-			printf("fgets error!");
-			printf("\nYour major code:");
+		while(!safe_fgets(temp_student.major_code,CODE_LINE)){
+			printf("fgets error!\n");
+			printf("Your major code:");
 		}
-		mcl_p = Search_mcl_item_code(&mcl_head,major_code);
+		mcl_p = Search_mcl_item_code(&mcl_head,temp_student.major_code);
 		if(mcl_p==NULL)printf("Could not find your major code.\n");
 	}while(mcl_p==NULL);
-
-//   这是again版本，但是我觉得不太舒服，写了上面的优化版本。		
-//	again_2:	
-//		printf("Your major code:");
-//		fgets(major_code,CODE_LINE,stdin);
-//		fgets_demo(major_code);
-//		mcl_p=Search_mcl_item_code(&mcl_head,major_code);
-//		if(mcl_p==NULL){
-//			printf("Could not fine your major code.\n");
-//			goto again_2;
-//		}
 	
-	cpystring(major_code,p->major_code,CODE_LINE);
-	cpystring(mcl_p->name,p->major_name,COURSE_NAME_LINE);
-		
-	give_elective_credits(mcl_p->Category,p);
-		
+	cpystring(mcl_p->name,temp_student.major_name,COURSE_NAME_LINE);	
+	give_elective_credits(mcl_p->Category,&temp_student);
 	free_malloc_mcl(&mcl_head);
 	
-	clean_the_history(p);
-	
-	cpystring("",p->name,NAME_LINE);
 	printf("Your name:");
-	while(!safe_fgets(p->name,NAME_LINE)){
+	while(!safe_fgets(temp_student.name,NAME_LINE)){
 		printf("fgets error!\n");
 		printf("Your name:");
 	}
 	
+	if((p=(S_Student_List*)malloc(sizeof(S_Student_List)))==NULL){
+		printf("malloc error!\n");
+		exit(1);
+	}
+	copy_ssl_without_next(&temp_student,p);            //show.h
 	Insert_account(ssl_head,p);
 	
 	return p;
 }
 
+//检查完毕 1
 void Insert_account(S_Student_List* ssl_head,S_Student_List *p){
 	S_Student_List *r=ssl_head->next;
 	S_Student_List *l=ssl_head;
-	while(r){
-		if(!r){
-			break;
-		}else if(r->ID > p->ID){
-			break;
-		}else{
-			l = r;
-			r = r->next;
-		}
+	while(r!=NULL){
+		if(p->ID < r->ID)break;
+		l = r;
+		r = r->next;
 	}		
 	l->next = p;
 	p->next = r;
 }
 
-void free_malloc_ssl_list(S_Student_List* ssl_head){
+//检查完毕 1   
+void free_malloc_ssl_list(S_Student_List* ssl_head){     
 	S_Student_List* r=ssl_head->next;
 	S_Student_List* temp =NULL;
 	while(r){
+		temp = r;                  
 		r=r->next;
 		free(temp);
 	}
 	ssl_head->next=NULL;
-}
-
-void fgets_demo(char* string){
-	int length=strlen(string)-1;
-	
-	if(string[length]=='\n')string[length]=0;
 }
 
 Bool password_security(char* key){
@@ -204,6 +188,7 @@ Bool password_security(char* key){
 		for(i=0;i<strlen(key);i++){
 			if(key[i]>='a'&&key[i]<='z')lowercase=ON;
 			else if(key[i]>='A'&&key[i]<='Z')uppercase=ON;
+			else if(key[i]>='0'&&key[i]<='9');
 			else others=ON;
 			if(uppercase&&lowercase&&others){
 				flag=ON;break;
@@ -214,6 +199,7 @@ Bool password_security(char* key){
 	return flag;
 }
 
+//检查完毕 1
 void cpystring(char *paste,char *wall,int size){
 	int i=0;
 	
@@ -228,6 +214,7 @@ void cpystring(char *paste,char *wall,int size){
 	}
 }
 
+//检查完毕 1
 void give_elective_credits(Bool category,S_Student_List*p){
 	
 	if(category){
@@ -374,6 +361,8 @@ void change_password(S_Student_List *p){
 			}
 		}
 	}while(!flag);
+	
+	cpystring(key,p->key,KEY_LINE);
 	
 	printf("finshed!");	
 	buffer_line();	

@@ -21,28 +21,29 @@ Class_List cl_head = {
 };
 
 Major_Code_List mcl_head={
-	0 
+	0                                     //这几个头节点没啥要注释的吧
 };
 
-Bool Open_Student_Course = OFF; 
+Bool Open_Student_Course = OFF;             //选课开关变量
 
 int main(int argc, char *argv[])
 {
 	//SetConsoleOutputCP(65001);   //编码统一，之前调试一直有bug
-    S_Student_List *p = NULL;
-    int i = 0,c=0;
-    S_Student_List student_temp ={0};
-	read_Open_Student_Course();
-    Read_SSL(&ssl_head); // 读取
+    S_Student_List *p = NULL;         //用于验证的指针
+    int i = 0;                        //i用于case
+    S_Student_List student_temp ={0};      //临时学生元素，节省内存开销
+	read_Open_Student_Course();            //读取选课开关情况   //show.h
+    Read_SSL(&ssl_head); // 读取             //show.h
 
-    p = Inquiry_User(&ssl_head); // 询问
+    p = Inquiry_User(&ssl_head); // 询问       //student.h
 
     // 进入
     if (p == &ssl_head)
     {
         // 管理员
         printf("Welcome,%s!\n", p->name);
-        free_malloc_ssl_list(p);
+        free_malloc_ssl_list(p);                     //student.h
+        buffer_line();
         do
         {
             show_admin_menu();
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
                 exit(1);
                 break;
             default:
+            	printf("Input the illegal number.\n");
                 break;
             }
         } while (1);
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
     else
     {
         // 学生
-        copy_ssl(p,&student_temp);
+        copy_ssl_without_next(p,&student_temp);
         Save_SSL(&ssl_head);
         free_malloc_ssl_list(&ssl_head);
         printf("Welcome,User:%s\n", student_temp.name);
@@ -99,7 +101,7 @@ int main(int argc, char *argv[])
         			
         			Read_SSL(&ssl_head);
         			p = Search_Student_ID(&ssl_head,student_temp.ID);
-        			copy_ssl(&student_temp, p);
+        			copy_ssl_without_next(&student_temp, p);
         			Save_SSL(&ssl_head);
         			free_malloc_ssl_list(&ssl_head);
         			break;
@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
         			
         			Read_SSL(&ssl_head);
         			p = Search_Student_ID(&ssl_head,student_temp.ID);
-        			copy_ssl(&student_temp, p);
+        			copy_ssl_without_next(&student_temp, p);
         			Save_SSL(&ssl_head);
         			free_malloc_ssl_list(&ssl_head);
         			break;
@@ -119,7 +121,7 @@ int main(int argc, char *argv[])
      				change_password(&student_temp);
      				Read_SSL(&ssl_head);
         			p = Search_Student_ID(&ssl_head,student_temp.ID);
-        			copy_ssl(&student_temp, p);
+        			copy_ssl_without_next(&student_temp, p);
         			Save_SSL(&ssl_head);
         			free_malloc_ssl_list(&ssl_head);
         			break;
@@ -128,6 +130,7 @@ int main(int argc, char *argv[])
         			exit(0);
         			break;
         		default:
+        			printf("Input the illegal number.\n");
         			break;
 			}
     	}while(1);

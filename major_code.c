@@ -23,21 +23,21 @@ void admin_major_menu(Major_Code_List* mcl_head){
 	do{
 		show_major_code_menu();
 		SAFE_READ(d,"Your choose:",i);
-		Read_major_code_list(mcl_head,mcl_file);
+		Read_major_code_list(mcl_head);
 		switch(i){
 			case 0:
 				Browse_mcl(mcl_head);
-				Save_mcl(mcl_head,mcl_file);
+				Save_mcl(mcl_head);
 				free_malloc_mcl(mcl_head);
 				break;
 			case 1:
 				Entry_Major_Code(mcl_head);
-				Save_mcl(mcl_head,mcl_file);
+				Save_mcl(mcl_head);
 				free_malloc_mcl(mcl_head);
 				break;
 			case 2:		
 				Delete_mcl_item(mcl_head);
-				Save_mcl(mcl_head,mcl_file);
+				Save_mcl(mcl_head);
 				free_malloc_mcl(mcl_head);
 				break;
 			case 3:
@@ -55,79 +55,61 @@ void admin_major_menu(Major_Code_List* mcl_head){
 				exit(0);
 				break;
 			default:
+				printf("Input the illegal number.\n");
 				break;
 		}
 	}while(1);
 }
 
-void Read_major_code_list(Major_Code_List * mcl_head,char * file){
+//检查完毕 1
+void Read_major_code_list(Major_Code_List * mcl_head){
 	FILE *fp=NULL;
-	Major_Code_List mcl_temp={0};
-	Major_Code_List *p=NULL,*head=mcl_head;
-	
-	Bool flag = ON;
-	//我将加入更加安全的文件保护，这是第一次尝试，如果可以，前面的我都会找机会修改。
-	//怀疑bug在这里
-	again:
-	errno = 0;
-	if((fp=fopen(file,"rb"))==NULL){
+	Major_Code_List mcl_temp={0},
+		cleaner = {0};
+	Major_Code_List *p=NULL,
+		*head=mcl_head;
+
+	while((fp=fopen(MCL_FILE,"rb"))==NULL){
 		if(errno==ENOENT){
-			printf("%s does not exist\n",file);
-			printf("Creating the %s\n",file);
-			if((fp=fopen(file,"wb"))==NULL){
-				printf("Creating error!");
-				exit(1);
-			}else printf("Success.\n");
-			fclose(fp);
-			goto again;
+			 Save_mcl(mcl_head);
 		}else{
-			printf("%s fopen error!\n",file);
+			printf("%s fopen error!\n",MCL_FILE);
 			exit(1);
 		}
 	}
 	
-	flag = ON;
 	while((fread(&mcl_temp,sizeof(Major_Code_List)-sizeof(mcl_temp.next),1,fp))==1){
 		if((p=(Major_Code_List*)malloc(sizeof(Major_Code_List)))==NULL){
 			printf("malloc error!");
 			exit(1);
 		}
-		if(flag){
-			cpy_mcl_item(&mcl_temp,head);
-			flag = OFF;	
-		}else{
-			cpy_mcl_item(&mcl_temp,p);
-			head->next = p;
-			head = p;
-		}
+		copy_mcl_item_without_next(&mcl_temp,p);
+		p->next = NULL;
+		head->next = p;
+		head = head->next;
+		copy_mcl_item_without_next(&cleaner,&mcl_temp);
 	}
 	
 	fclose(fp);
 }
 
-void cpy_mcl_item(Major_Code_List* paste,Major_Code_List* wall){
-	clean_mcl_item(wall);
+//检查完毕 1
+void copy_mcl_item_without_next(Major_Code_List* paste,Major_Code_List* wall){
 	wall->Category=paste->Category;
 	cpystring(paste->code,wall->code,CODE_LINE);
-	cpystring(paste->name,wall->name,COURSE_NAME_LINE);
-	
+	cpystring(paste->name,wall->name,COURSE_NAME_LINE);	
 }
 
-void clean_mcl_item(Major_Code_List* wall){
-	char white_code[CODE_LINE]={0};
-	char white_name[COURSE_NAME_LINE]={0};
-	
-	wall->Category=OFF;
-	cpystring(white_code,wall->code,CODE_LINE);
-	cpystring(white_name,wall->name,COURSE_NAME_LINE);
-	wall->next=NULL;
-}
 
 void Browse_mcl(Major_Code_List* mcl_head){
 	Major_Code_List *r=mcl_head->next;
+	int i=0;
 	
-	printf("| Category | Major Code | Major Name\n");
-	while(r!=NULL){
+	for(i=0;r!=NULL;i++){
+		if(i%20==0&&i!=0)	{
+			buffer_line();
+			printf("| Category | Major Code | Major Name\n");
+		}
 		if(r->Category){
 			printf("|%-10s|","SS");
 		}else printf("|%-10s|","HSS");
@@ -161,7 +143,6 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 	do{
 	
 		p = (Major_Code_List*)malloc(sizeof(Major_Code_List));
-		clean_mcl_item(p);
 		printf("Input the Major:\n");
 		
 		do{
@@ -176,17 +157,6 @@ void Entry_Major_Code(Major_Code_List* mcl_head){
 				flag = ON;
 			}
 		}while(flag);
-
-// 	again逻辑用上面的do while 代替		
-//		again4:
-//		printf("Major Code:");
-//		fgets(p->code,CODE_LINE,stdin);
-//		fgets_demo(p->code);
-//		while((c=getchar())!='\n'&&c!=EOF);
-//		if(strcmp(p->code,"000000")<0){
-//			printf("Your input is illegal.\n");
-//			goto again4;
-//		}
 		
 		if((same=Search_mcl_item_code(mcl_head,p->code))!=NULL){
 			printf("There have a same one.\n");
@@ -249,7 +219,7 @@ void Insert(Major_Code_List* mcl_head,Major_Code_List *p){
 			SAFE_READ(c,"Do you want to replace this one?(y/n)",out);
 			if(out=='y'||out=='Y'){
 				next = r->next;
-				cpy_mcl_item(p,r);
+				copy_mcl_item_without_next(p,r);
 				r->next = next;
 				flag =OFF;
 				free(p);
@@ -289,21 +259,22 @@ void show_mcl_item(Major_Code_List* p){
 	printf("Major Name:%s\n",p->name);
 }
 
-void Save_mcl(Major_Code_List* mcl_head,char* file){
-	Major_Code_List* l =mcl_head;
+//检查完毕 1
+void Save_mcl(Major_Code_List* mcl_head){
+	Major_Code_List* r =mcl_head->next;
 	FILE *fp =NULL;
 	
-	if((fp=fopen(file,"wb"))==NULL){
-		printf("%s fopen error!\n",file);
+	if((fp=fopen(MCL_FILE,"wb"))==NULL){
+		printf("%s fopen error!\n",MCL_FILE);
 		exit(1);
 	}
 	
-	while(l!=NULL){
-		if((fwrite(l,sizeof(Major_Code_List)-sizeof(l->next),1,fp))!=1){
-			printf("%s fwrite error!\n");
+	while(r!=NULL){
+		if((fwrite(r,sizeof(Major_Code_List)-sizeof(mcl_head->next),1,fp))!=1){
+			printf("fwrite error!\n");
 			exit(1);
 		}
-		l = l->next;
+		r = r->next;
 	}
 	fclose(fp);
 }
@@ -339,7 +310,7 @@ void Delete_mcl_item(Major_Code_List*mcl_head){
 	}
 }
 
-
+//检查完毕 1
 Major_Code_List* Search_mcl_item_code(Major_Code_List*mcl_head,char *code){
 	Major_Code_List*p = NULL;
 	Major_Code_List *r = mcl_head->next;

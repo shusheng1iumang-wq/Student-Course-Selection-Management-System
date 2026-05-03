@@ -10,6 +10,7 @@
 extern Bool Open_Student_Course;
 
 void show_major_code_menu(void){
+	printf("--------------------\n");
 	printf("Major Code Operation Menu:\n");
 	printf("0->Browse Major Code\n");
 	printf("1->Entry Major Code\n");
@@ -17,9 +18,11 @@ void show_major_code_menu(void){
 	printf("3->Fresh the File\n");
 	printf("4->Go back\n");
 	printf("5->Exit\n");
+	printf("--------------------\n");
 }
 
 void show_student_menu(void){
+	printf("--------------------\n");
 	printf("Operation menu:\n");
 	printf("0->Browse Course\n");
 	printf("1->View personal information\n");
@@ -28,10 +31,13 @@ void show_student_menu(void){
 	printf("4->Cancel the course\n");
 	printf("5->Change password.\n");
 	printf("6->exit\n");
+	printf("--------------------\n");
 }
 
+//检查完毕 1
 void show_admin_student_menu(void)
 {
+	printf("--------------------\n");
     printf("Student operation menu:\n");
     printf("0->Student Entry\n");
     printf("1->Browse Students\n");
@@ -39,18 +45,25 @@ void show_admin_student_menu(void)
     printf("3->Fresh the file\n");
     printf("4->go back\n");
     printf("5->exit\n");
+   	printf("--------------------\n");
 }
 
+//检查完毕 1
 void show_admin_menu(void)
-{
+{	
+	printf("--------------------\n");
     printf("Operation menu:\n");
     printf("0->class\n");
     printf("1->student\n");
     printf("2->major code\n");
     printf("3->exit\n");
+	printf("--------------------\n");
 }
+
+//检查完毕 1
 void show_admin_class_menu(void)
 {
+	printf("--------------------\n");
     printf("Class_operation_menu:\n");
     printf("0->Course_Entry\n");
     printf("1->Browse Courses\n");
@@ -60,17 +73,19 @@ void show_admin_class_menu(void)
     printf("5->Course completion and student score entry.\n");
     printf("6->go back\n");
     printf("7->exit\n");
+    printf("--------------------\n");
 }
 
+//检查完毕 1
 void Save_SSL(S_Student_List *ssl_head)
 {
     FILE *fp = NULL;
-    char *file_ssl = "Student_list.txt";
-    S_Student_List *l = ssl_head, *r = ssl_head->next;
+    S_Student_List *l = NULL, 
+		*r = ssl_head->next;
 
-    if ((fp = fopen(file_ssl, "wb")) == NULL)
+    if ((fp = fopen(SSL_FILE, "wb")) == NULL)
     {
-        printf("%s fopen error!\n", file_ssl);
+        printf("%s fopen error!\n", SSL_FILE);
         exit(1);
     }
 
@@ -88,18 +103,24 @@ void Save_SSL(S_Student_List *ssl_head)
     fclose(fp);
 }
 
+//检查完毕 1
 void Read_SSL(S_Student_List *ssl_head)
 {
     FILE *fp = NULL;
-    char *file_ssl = "Student_list.txt";
-    S_Student_List temp_ssl;
+    S_Student_List temp_ssl={0},
+		cleaner={0};
     S_Student_List *head = ssl_head;
     S_Student_List *next;
+    ssl_head->next = NULL;
 
-    if ((fp = fopen(file_ssl, "rb")) == NULL)
+    while((fp = fopen(SSL_FILE, "rb")) == NULL)
     {
-        printf("%s fread error!\n", file_ssl);
-        exit(1);
+		if(errno==ENOENT){                 //没有文件，创造文件
+			Save_SSL(ssl_head);        			
+		}else{
+			printf("fopen %s file error\n",SSL_FILE);
+			exit(1);
+		}
     }
 
     while (fread(&temp_ssl, sizeof(S_Student_List) - sizeof(ssl_head->next), 1, fp) == 1)
@@ -109,15 +130,18 @@ void Read_SSL(S_Student_List *ssl_head)
             printf("read_ssl malloc error!\n");
             exit(1);
         };
-        copy_ssl(&temp_ssl, next);
+        copy_ssl_without_next(&temp_ssl, next);
+        next->next = NULL;
         head->next = next;
         head = next;
+        copy_ssl_without_next(&cleaner,&temp_ssl);
     }
 
     fclose(fp);
 }
 
-void copy_ssl(S_Student_List *paste, S_Student_List *wall)
+//检查完毕 1
+void copy_ssl_without_next(S_Student_List *paste, S_Student_List *wall)
 {
     int i = 0;
     int j = 0;
@@ -127,9 +151,10 @@ void copy_ssl(S_Student_List *paste, S_Student_List *wall)
     cpystring(paste->key, wall->key, KEY_LINE);
     cpystring(paste->major_code,wall->major_code,CODE_LINE);
     cpystring(paste->major_name,wall->major_name,COURSE_NAME_LINE);
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; i++){
         wall->elective_credits[i][0] = paste->elective_credits[i][0];
         wall->elective_credits[i][1] = paste->elective_credits[i][1];
+    }
     for (i = 0; i < 2; i++)
     {
         for (j = 0; j < 10; j++)
@@ -158,6 +183,7 @@ void clean_ssl_item(S_Student_List *wall)
     wall->next = NULL;
 }
 
+//检查完毕 1
 void show_cl_item(Class_List *p)
 {
     printf("Course Number:%d\n", p->Course_Number);
@@ -194,14 +220,13 @@ void fresh_file(char* file){
 	fclose(fp);   //更加安全
 }
 
+//检查完毕 1
 void read_Open_Student_Course(void){
 	FILE* fp=NULL;
 	
-	again2:
-	if((fp=fopen(OPEN_FILE,"rb"))==NULL){
+	while((fp=fopen(OPEN_FILE,"rb"))==NULL){
 		if(errno==ENOENT){
 			save_Open_Student_Course();
-			goto again2;
 		}else{
 			printf("fopen %s file error\n",OPEN_FILE);
 			exit(1);
@@ -214,6 +239,7 @@ void read_Open_Student_Course(void){
 	fclose(fp);
 }
 
+//检查完毕 1
 void save_Open_Student_Course(void){
 	FILE *fp=NULL;
 	
@@ -230,7 +256,10 @@ void save_Open_Student_Course(void){
 	fclose(fp);
 }
 
+//检查完毕 1
 Bool safe_fgets(char*string,int size){
+	int length;
+	
 	cpystring("",string,size);
 	if((fgets(string,size,stdin))==NULL)return OFF;
 	if(strchr(string,'\n')==NULL){
@@ -238,7 +267,10 @@ Bool safe_fgets(char*string,int size){
 		while((c=getchar())!='\n'&&c!=EOF);
 		return OFF;
 	}
-	fgets_demo(string);
+	
+	length = strlen(string) - 1;
+	if(string[length]=='\n')string[length]=0;
+	
 	return ON;
 }
 
@@ -257,6 +289,7 @@ Bool safe_fgets(char*string,int size){
 //	return OFF;
 //}
 
+//检查完毕 1
 void buffer_line(void){
 	char line[CODE_LINE];
 	do{
