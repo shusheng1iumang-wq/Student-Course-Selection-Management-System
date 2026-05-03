@@ -17,8 +17,7 @@
 
 
 void admin_major_menu(Major_Code_List* mcl_head){
-	char* mcl_file="major_code_list.txt";
-	int i = 0,c=0;
+	int i = 0;
 	
 	do{
 		show_major_code_menu();
@@ -42,7 +41,7 @@ void admin_major_menu(Major_Code_List* mcl_head){
 				break;
 			case 3:
 				free_malloc_mcl(mcl_head);
-				fresh_file(mcl_file);
+				fresh_file(MCL_FILE);
 				break;
 			case 4:
 				free_malloc_mcl(mcl_head);

@@ -389,12 +389,15 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 	Class_List* p =NULL;
 	int i = 0;
 	int count = 0;
+	int course_have[2]={0};
 	
-	for(i=0;i<10;i++){
+	for(i=0;i<10&&count<2;i++){
 		if(student_temp->elective_record[HSS][i][0]!=0&&student_temp->elective_record[HSS][i][1]==0){
+			course_have[count] = (int)student_temp->elective_record[HSS][i][0];
 			count++;
 		}
 		if(student_temp->elective_record[SS][i][0]!=0&&student_temp->elective_record[SS][i][1]==0){
+			course_have[count] = (int)student_temp->elective_record[SS][i][0];
 			count++;
 		}
 	}
@@ -409,8 +412,17 @@ void Course_registration(S_Student_List *student_temp,Class_List *cl_head){
 		printf("Please wait for the administrator to enable it.\n");
 		return;
 	}
+	
 	SAFE_READ(d,"Input the course number you want enter:",number);
+	for(i=0;i<2;i++){
+		if(number==course_have[i]){
+			printf("You have entry the same course.\n");
+			printf("Cannot entry again.\n");
+			return;
+		}
+	}
 	p = check_course_number(cl_head,number);
+	
 	if(p==NULL){
 		printf("Sorry.Could not find the corresponding course number.\n");
 		return;
@@ -459,6 +471,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 	double* cnp[2] = {0};    //course_number_p
 	double *secp[2] = {0};  //student_elective_credits_p
 	Class_List *p = NULL;
+	Bool flag = OFF;
 	
 	if(Open_Student_Course==OFF){
 		printf("Course selection channel has been closed.\n");
@@ -479,18 +492,33 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 			secp[count++] = &student_temp->elective_credits[SS][1];
 		}
 	}
+	if(count==0){
+		printf("You haven't enrolled in any courses.\n");
+		return;
+	}
 	SAFE_READ(d,"Input the course number to cancel:",number);
 	p = check_course_number(cl_head,number);
 	if(p==NULL){
 		printf("Cannot find.\n");
+		return;
+	}else{
+		for(i=0;i<count;i++){
+			if(*cnp[i]==number){
+				flag = ON;
+				break;
+			}
+		}
+	}
+	if(!flag){
+		printf("You haven't enrolled in this course.\n");
 		return;
 	}
 	printf("The course information:\n");
 	show_cl_item(p);
 	SAFE_READ(c,"Are you sure?(y/n)",out);
 	if(out=='y'||out=='Y'){
-		p->Current_Students--;
-		for(i=0;i<2;i++){
+		(p->Current_Students)--;
+		for(i=0;i<count;i++){
 			if(*cnp[i]==number){
 				*cnp[i]=0;
 				*secp[i]-=p->Credits;
@@ -500,7 +528,7 @@ void Cancel_the_course(S_Student_List *student_temp,Class_List *cl_head){
 	}
 }
 
-//检查完毕？
+//检查完毕 1
 void course_completion(Class_List*cl_head){
 	read_Open_Student_Course();
 	if(Open_Student_Course==ON){

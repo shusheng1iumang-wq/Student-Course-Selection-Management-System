@@ -26,6 +26,8 @@ Major_Code_List mcl_head={
 
 Bool Open_Student_Course = OFF;             //选课开关变量
 
+Bool extern_flag;
+
 int main(int argc, char *argv[])
 {
 	//SetConsoleOutputCP(65001);   //编码统一，之前调试一直有bug
@@ -133,6 +135,7 @@ int main(int argc, char *argv[])
         			printf("Input the illegal number.\n");
         			break;
 			}
+			buffer_line();
     	}while(1);
     };
 

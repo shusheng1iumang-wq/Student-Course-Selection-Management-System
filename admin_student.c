@@ -7,6 +7,7 @@
 
 extern Major_Code_List mcl_head;
 
+//检查完毕 1
 void admin_student_menu(S_Student_List *ssl_head)
 {
     int i = 0;
@@ -48,6 +49,7 @@ void admin_student_menu(S_Student_List *ssl_head)
     } while (1);
 }
 
+//检查完毕 1
 void Student_Entry(S_Student_List* ssl_head){
 	lli id=0;
 	char out=0;
