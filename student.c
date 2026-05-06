@@ -325,6 +325,7 @@ void change_password(S_Student_List *p){
 		}
 		if(!strcmp(key,p->key)){
 			flag = ON;
+		}else{
 			printf("Incorrect password.\n");
 		}
 	}while(!flag);
