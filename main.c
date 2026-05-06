@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         printf("Welcome,User:%s\n", student_temp.name);
         printf("The course selection channel is");
         if(Open_Student_Course)printf(" Opened.\n");
-        else printf("Closed.\n");
+        else printf(" Closed.\n");
         do{
         	show_student_menu();
         	SAFE_READ(d,"Your choose:",i);
